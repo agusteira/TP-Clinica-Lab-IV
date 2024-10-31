@@ -1,2 +1,38 @@
 <app-nav-default></app-nav-default>
-<p>register works!</p>
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+
+        <h2>Registrarse</h2>
+        <div>
+            <h3 
+                [ngClass]="{'active': usuario === 'paciente', 'inactive': usuario !== 'paciente'}" 
+                (click)="usuario = 'paciente'">
+                Paciente
+            </h3>
+            <h3 
+                [ngClass]="{'active': usuario === 'especialista', 'inactive': usuario !== 'especialista'}" 
+                (click)="usuario = 'especialista'">
+                Especialista
+            </h3>
+        </div>
+        
+        <app-register-especialista *ngIf="usuario === 'especialista'"> </app-register-especialista>
+        <app-register-paciente *ngIf="usuario === 'paciente'"> </app-register-paciente>
+
+        <!-- Already have an account? -->
+        <div id="formFooter">
+            <a class="underlineHover" [routerLink]="['/login']">Ya tienes una cuenta? Inicia sesion!</a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de error -->
+<div *ngIf="showErrorModal" class="modal-overlay">
+  <div class="modal-content">
+    <h2>Error</h2>
+    <p>{{ errorMessage }}</p>
+    <button (click)="closeModal()">Cerrar</button>
+  </div>
+</div>

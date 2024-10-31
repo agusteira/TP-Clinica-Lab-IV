@@ -1,35 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 
-/* BASIC */
-
-html {
-    background-color: #000000;
-}
-
-body {
-    background-color: #0c0c0c;
-    font-family: "Poppins", sans-serif;
-    height: 100vh;
-}
-
-a {
-  color: #92badd;
-  display:inline-block;
-  text-decoration: none;
-  font-weight: 400;
-}
-
-h2 {
-  text-align: center;
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: uppercase;
-  display:inline-block;
-  margin: 40px 8px 10px 8px; 
-  color: #000000;
-}
-
-
 
 /* STRUCTURE */
 
@@ -77,6 +47,15 @@ h2.inactive {
 }
 
 h2.active {
+    color: #cccccc;
+    border-bottom: 2px solid #5fbae9;
+}
+
+h3.inactive {
+    color: #7a7a7a;
+  }
+  
+h3.active {
     color: #cccccc;
     border-bottom: 2px solid #5fbae9;
 }
@@ -138,6 +117,7 @@ input[type=text], input[type =password] {
   transition: all 0.5s ease-in-out;
   -webkit-border-radius: 5px 5px 5px 5px;
   border-radius: 5px 5px 5px 5px;
+
 }
 
 input[type=text]:focus {
@@ -149,11 +129,36 @@ input[type=text]:placeholder {
   color: #cccccc;
 }
 
+select {
+    background-color: #f6f6f6;
+    border: 2px solid #f6f6f6;
+    color: #0d0d0d;
+    padding: 15px 32px;
+    text-align: center;
+    font-size: 16px;
+    margin: 5px;
+    width: 85%;
+    border-radius: 5px;
+    transition: all 0.5s ease-in-out;
+    appearance: none; /* Elimina el estilo predeterminado del navegador */
+}
+
+/* Estilo para el estado enfocado */
+select:focus {
+    background-color: #fff;
+    border-bottom: 2px solid #5fbae9;
+}
+
+/* Opcional: Agregar un cursor pointer para mejorar la experiencia del usuario */
+select:hover {
+    cursor: pointer;
+}
+
 
 
 /* ANIMATIONS */
 
-/* Simple CSS3 Fade-in-down Animation */
+/*======================FADE IN ===================*/
 .fadeInDown {
   -webkit-animation-name: fadeInDown;
   animation-name: fadeInDown;
@@ -233,7 +238,6 @@ input[type=text]:placeholder {
   animation-delay: 1s;
 }
 
-/* Simple CSS3 Fade-in Animation */
 .underlineHover:after {
   display: block;
   left: 0;
@@ -292,7 +296,6 @@ input[type=text]:placeholder {
   text-align: center;
   z-index: 1002;
   width: 30%;
-  
 }
 
 /* Botón de cerrar en el modal */
@@ -304,29 +307,41 @@ input[type=text]:placeholder {
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  
 }
 
 .modal-content button:hover {
   background-color: #004080;
 }
 
-.auto-fill-buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
+.text-danger{
+  color: solid red;
+  font-size: 13px;
+  font-family: "Poppins", sans-serif;
 }
 
-.auto-fill-buttons button {
-  padding: 20px 30px;
-  background-color: #012442;
-  color: #ffffff;
-  border: none;
+/*========IMAGEN==============*/
+
+.custom-file-upload {
+  display: inline-block;
+  padding: 15px 32px;
   cursor: pointer;
-  border-radius: 15px;
-  margin-left:15px
+  background-color: #f6f6f6;
+  border: 2px solid #f6f6f6;
+  color: #0d0d0d;
+  border-radius: 5px;
+  transition: all 0.5s ease-in-out;
+  width: 85%;
+  text-align: center;
 }
 
-.auto-fill-buttons button:hover {
-  background-color: #004080;
+.custom-file-upload:hover {
+  background-color: #fff;
+  border-bottom: 2px solid #5fbae9;
+}
+
+.preview-image {
+  margin-top: 10px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
 }

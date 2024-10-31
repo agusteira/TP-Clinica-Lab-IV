@@ -1,0 +1,88 @@
+<form [formGroup]="formEspecialista" (ngSubmit)="RegistrarsEspecialista()">
+    <div id="nombre">
+        <input type="text" class="fadeIn second" name="nombre" placeholder="Nombre" formControlName="nombre">
+        <ng-container *ngIf="formEspecialista.get('nombre')?.hasError('pattern') && formEspecialista.get('nombre')?.touched">
+            <br>
+            <small class="text-danger">El nombre sólo debe contener letras</small>
+        </ng-container>
+    </div>
+
+    <div id="apellido">
+        <input type="text" class="fadeIn second" name="apellido" placeholder="Apellido" formControlName="apellido">
+        <ng-container *ngIf="formEspecialista.get('apellido')?.hasError('pattern') && formEspecialista.get('apellido')?.touched">
+            <br>
+            <small class="text-danger">El apellido sólo debe contener letras</small>
+        </ng-container>
+    </div>
+
+    <div id="edad">
+        <input type="text" class="fadeIn third" name="edad" placeholder="Edad" formControlName="edad">
+        <ng-container *ngIf="formEspecialista.get('edad')?.hasError('pattern') && formEspecialista.get('edad')?.touched">
+            <br>
+            <small class="text-danger">La edad debe ser un número</small>
+        </ng-container>
+    </div>
+
+    <div id="DNI">
+        <input type="text" class="fadeIn third" name="DNI" placeholder="DNI" formControlName="DNI">
+        <ng-container *ngIf="formEspecialista.get('DNI')?.hasError('pattern') && formEspecialista.get('DNI')?.touched">
+            <br>
+            <small class="text-danger">El DNI debe ser un número</small>
+        </ng-container>
+    </div>
+
+    <div id="correo">
+        <input type="text" class="fadeIn third red" name="correo" placeholder="Correo" formControlName="correo">
+        <ng-container *ngIf="formEspecialista.get('correo')?.hasError('email') && formEspecialista.get('correo')?.touched">
+            <br>
+            <small class="text-danger">Formato de correo inválido</small>
+        </ng-container>
+    </div>
+
+    <div id="password">
+        <input type="password" class="fadeIn third" name="password" placeholder="Contraseña" formControlName="clave">
+        <ng-container *ngIf="formEspecialista.get('clave')?.hasError('minlength') && formEspecialista.get('clave')?.touched">
+            <br>
+            <small class="text-danger">
+                La clave debe tener mínimo {{formEspecialista.get('clave')?.getError('minlength').requiredLength}} caracteres
+            </small>
+        </ng-container>
+    </div>
+
+    <div id="especialidad">
+        <select formControlName="especialidad" class="fadeIn third" (change)="onEspecialidadChange($event)">
+            <option value="">Seleccione una especialidad</option>
+            <option value="cardiologia">Cardiología</option>
+            <option value="dermatologia">Dermatología</option>
+            <option value="pediatria">Pediatría</option>
+            <option value="neurologia">Neurología</option>
+            <option value="otra">Otra</option>
+        </select>
+        <ng-container *ngIf="formEspecialista.get('especialidad')?.hasError('required') && formEspecialista.get('especialidad')?.touched">
+            <small class="text-danger">La especialidad es obligatoria</small>
+        </ng-container>
+    </div>
+    
+
+    <div *ngIf="formEspecialista.get('especialidad')?.value === 'otra'" id="especialidadPersonalizada">
+        <input type="text" class="fadeIn third" name="especialidadPersonalizada" placeholder="Especifique su especialidad" formControlName="especialidadPersonalizada">
+        <br>
+        <ng-container *ngIf="formEspecialista.get('especialidadPersonalizada')?.hasError('required') && formEspecialista.get('especialidadPersonalizada')?.touched">
+            <small class="text-danger">Esta opción es obligatoria</small>
+        </ng-container>
+    </div>
+
+    <div id="foto" class="fadeIn third">
+        <input type="file" id="fotoInput" (change)="onFileSelected($event)" accept="image/*" style="display: none;" #fileInput>
+        <label for="fotoInput" class="custom-file-upload">
+            <span id="file-name">Seleccionar Imagen</span>
+        </label>
+        <img *ngIf="previewUrl" [src]="previewUrl" alt="Vista previa" class="preview-image">
+        <small class="text-danger" *ngIf="formEspecialista.get('foto')?.hasError('required') && formEspecialista.get('foto')?.touched">
+            La foto es obligatoria
+        </small>
+    </div>
+    
+
+    <input type="submit" class="fadeIn fourth" value="Registrarse" [disabled]="formEspecialista.invalid">
+</form>

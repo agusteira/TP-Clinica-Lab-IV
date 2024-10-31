@@ -1,0 +1,84 @@
+<form [formGroup]="formPaciente" (ngSubmit)="RegistrarPaciente()">
+    <div id="nombre">
+        <input type="text" class="fadeIn second" name="nombre" placeholder="Nombre" formControlName="nombre">
+        <ng-container *ngIf="formPaciente.get('nombre')?.hasError('pattern') && formPaciente.get('nombre')?.touched">
+            <br>
+            <small class="text-danger">El nombre sólo debe contener letras</small>
+        </ng-container>
+    </div>
+
+    <div id="apellido">
+        <input type="text" class="fadeIn second" name="apellido" placeholder="Apellido" formControlName="apellido">
+        <ng-container *ngIf="formPaciente.get('apellido')?.hasError('pattern') && formPaciente.get('apellido')?.touched">
+            <br>
+            <small class="text-danger">El apellido sólo debe contener letras</small>
+        </ng-container>
+    </div>
+
+    <div id="edad">
+        <input type="text" class="fadeIn third" name="edad" placeholder="Edad" formControlName="edad">
+        <ng-container *ngIf="formPaciente.get('edad')?.hasError('pattern') && formPaciente.get('edad')?.touched">
+            <br>
+            <small class="text-danger">La edad debe ser un número</small>
+        </ng-container>
+    </div>
+
+    <div id="DNI">
+        <input type="text" class="fadeIn third" name="DNI" placeholder="DNI" formControlName="DNI">
+        <ng-container *ngIf="formPaciente.get('DNI')?.hasError('pattern') && formPaciente.get('DNI')?.touched">
+            <br>
+            <small class="text-danger">El DNI debe ser un número</small>
+        </ng-container>
+    </div>
+
+    <div id="correo">
+        <input type="text" class="fadeIn third red" name="correo" placeholder="Correo" formControlName="correo">
+        <ng-container *ngIf="formPaciente.get('correo')?.hasError('email') && formPaciente.get('correo')?.touched">
+            <br>
+            <small class="text-danger">Formato de correo inválido</small>
+        </ng-container>
+    </div>
+
+    <div id="password">
+        <input type="password" class="fadeIn third" name="password" placeholder="Contraseña" formControlName="clave">
+        <ng-container *ngIf="formPaciente.get('clave')?.hasError('minlength') && formPaciente.get('clave')?.touched">
+            <br>
+            <small class="text-danger">
+                La clave debe tener mínimo {{formPaciente.get('clave')?.getError('minlength').requiredLength}} caracteres
+            </small>
+        </ng-container>
+    </div>
+
+    <div id="obraSocial">
+        <input type="text" class="fadeIn third" name="obraSocial" placeholder="Obra Social" formControlName="obraSocial">
+        <ng-container *ngIf="formPaciente.get('obraSocial')?.hasError('required') && formPaciente.get('obraSocial')?.touched">
+            <br>
+            <small class="text-danger">La obra social es obligatoria</small>
+        </ng-container>
+    </div>
+
+    <div id="foto" class="fadeIn third">
+        <input type="file" id="fotoInput" (change)="onFileSelected($event, 1)" accept="image/*" style="display: none;" #fileInput1>
+        <label for="fotoInput" class="custom-file-upload">
+            <span id="file-name">Seleccionar Imagen 1</span>
+        </label>
+        <img *ngIf="previewUrl1" [src]="previewUrl1" alt="Vista previa 1" class="preview-image">
+        <small class="text-danger" *ngIf="formPaciente.get('foto')?.hasError('required') && formPaciente.get('foto')?.touched">
+            La foto es obligatoria
+        </small>
+    </div>
+    
+    <div id="fotoDos" class="fadeIn third">
+        <input type="file" id="fotoInputDos" (change)="onFileSelected($event, 2)" accept="image/*" style="display: none;" #fileInput2>
+        <label for="fotoInputDos" class="custom-file-upload">
+            <span id="file-name">Seleccionar Imagen 2</span>
+        </label>
+        <img *ngIf="previewUrl2" [src]="previewUrl2" alt="Vista previa 2" class="preview-image">
+        <small class="text-danger" *ngIf="formPaciente.get('fotoDos')?.hasError('required') && formPaciente.get('fotoDos')?.touched">
+            La foto es obligatoria
+        </small>
+    </div>
+    
+
+    <input type="submit" class="fadeIn fourth" value="Registrarse" [disabled]="formPaciente.invalid">
+</form>
