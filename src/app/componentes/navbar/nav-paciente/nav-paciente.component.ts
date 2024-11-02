@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav-paciente',
@@ -9,4 +10,8 @@ import { Component } from '@angular/core';
 })
 export class NavPacienteComponent {
 
+  constructor(private router: Router) {}
+  redirigir(ruta:string) {
+    this.router.navigate([ruta]);
+  }
 }

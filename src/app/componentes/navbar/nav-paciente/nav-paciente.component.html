@@ -1,1 +1,19 @@
-<p>nav-paciente works!</p>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fondo">
+    <button class="btn btn-outline-primary ms-auto" (click)="redirigir('/landing')">Home</button>
+    <div class="center">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" (click)="redirigir('/paciente/solicitar-turno')">Solicitar turno</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="redirigir('/paciente/mis-turnos')">Mis turnos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="redirigir('/ver-perfil')">Mi perfil</a>
+            </li>
+        </ul>
+    </div>
+    
+    <button class="btn btn-outline-primary ms-auto  ml-3" (click)="redirigir('/login')">Desconectase</button>
+</nav>
+
