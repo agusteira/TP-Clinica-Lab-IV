@@ -34,55 +34,6 @@ export class RegisterComponent {
   ngOnInit(): void {
   }
 
-  
-
-  
-
-  RegistrarsEspecialista(){
-    /*const correo = this.formEspecialista.get('correo')?.value;
-    const clave = this.formEspecialista.get('clave')?.value;
-    const confirmarClave = this.formEspecialista.get('confirmarClave')?.value;
-    const nombre = this.formEspecialista.get('nombre')?.value;
-
-    if (!correo || !clave || !nombre ||clave.length < 6) {
-      this.errorMessage = "Error: credenciales invalidas";
-      this.showErrorModal = true; 
-    }else if(clave != confirmarClave){
-      this.errorMessage = "Error: las contraseñas NO coinciden";
-      this.showErrorModal = true; 
-    }
-    else{
-
-      
-    createUserWithEmailAndPassword(this.auth, correo, clave).then((res) =>{
-      //this.GuardarDatosUsuarios(nombre,correo)
-      this.router.navigate(['/home'])
-    }).catch((e)=>{
-      this.showErrorModal = true; 
-      switch(e.code){
-        case "auth/invalid-email":
-          this.errorMessage = "Error: email invalido.";
-          break;
-        case "auth/email-already-in-use":
-          this.errorMessage = "Error: email YA en uso.";
-          break;
-        case "auth/network-request-failed":
-          this.errorMessage = "Error: Hubo un error con el internet";
-          break;
-        default:
-          this.errorMessage = e.code;
-      }
-    });
-  }*/}
-
-  /*GuardarDatosUsuarios(nombre:string, correo:string){
-    let col = collection(this.firestore, "Registro");
-    addDoc (col, {
-      "Email": correo,
-      "Nombre": nombre,
-      "Fecha": Date.now()
-    })
-  }*/
 
   closeModal() {
     this.showErrorModal = false; // Ocultar el modal

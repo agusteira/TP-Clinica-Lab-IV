@@ -1,0 +1,69 @@
+<div *ngIf="listaUsuarios.length > 0">
+  <div class="d-flex flex-column">
+    <div *ngFor="let usuario of listaUsuarios" class="card2 mb-4 card2-background" style="width: 100%;">
+      <div class="row no-gutters" *ngIf="!(usuario.tipoUsuario == 'especialista' && (usuario.habilitado =='pendiente' || usuario.habilitado =='rechazado'))">
+        <!-- Columna 1: Datos del usuario -->
+        <div class="col-md-8">
+          <div class="card2-body">
+            <h5 class="card2-title">{{ usuario.nombre }} {{ usuario.apellido }}</h5>
+            <p class="card2-text">
+              <strong>Edad:</strong> {{ usuario.edad }}<br>
+              <strong>DNI:</strong> {{ usuario.DNI }}<br>
+              <strong>Correo:</strong> {{ usuario.correo }}<br>
+              <strong>Tipo de Usuario:</strong> {{ usuario.tipoUsuario }}
+            </p>
+
+            <!-- Datos adicionales si es paciente -->
+            <div *ngIf="usuario.tipoUsuario === 'paciente'">
+              <p><strong>Obra Social:</strong> {{ usuario.obraSocial }}</p>
+            </div>
+
+            <!-- Datos adicionales si es especialista -->
+            <div *ngIf="usuario.tipoUsuario === 'especialista'">
+              <p><strong>Especialidad:</strong> {{ usuario.especialidad }}</p>
+              <p><strong>Habilitado:</strong> {{ usuario.habilitado }}</p>
+            </div>
+
+            <!-- Mostrar solo especialistas habilitados -->
+            <div *ngIf="usuario.tipoUsuario === 'especialista' && usuario.habilitado === 'aceptado'">
+              <!-- Botón para inhabilitar especialistas habilitados -->
+              <button class="btn btn-danger" (click)="inhabilitarUsuario(usuario.id)">
+                Inhabilitar
+              </button>
+            </div>
+
+            <!-- Botón para habilitar/inhabilitar a todos los usuarios -->
+            <div *ngIf="usuario.tipoUsuario !== 'especialista' || usuario.flag">
+              <!-- Si el flag es verdadero (inhabilitado) mostramos el botón de inhabilitar -->
+              <button *ngIf="usuario.flag=='true'" class="btn btn-warning" (click)="inhabilitarUsuario(usuario.id)">
+                Inhabilitar
+              </button>
+              <!-- Si el flag es falso (habilitado) mostramos el botón de habilitar -->
+              <button *ngIf="usuario.flag=='false'" class="btn btn-success" (click)="habilitarUsuario(usuario.id)">
+                Habilitar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna 2: Imágenes del usuario -->
+        <div class="col-md-4 card2Imagenes">
+          <div class="card2-body">
+            <!-- Foto 1 -->
+            <img *ngIf="usuario.foto1" [src]="usuario.foto1" class="img-fluid mb-2" alt="Foto de Usuario">
+
+            <!-- Foto 2 -->
+            <img *ngIf="usuario.foto2" [src]="usuario.foto2" class="img-fluid" alt="Foto adicional">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Si no hay usuarios -->
+<div *ngIf="listaUsuarios.length === 0">
+  <p>No se encontraron usuarios.</p>
+</div>
+
+<app-spinner *ngIf="spinner"></app-spinner>

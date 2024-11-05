@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({
@@ -11,4 +11,10 @@ import { HttpClientModule } from '@angular/common/http';
 })
 export class AppComponent {
   title = 'tp-clinica';
+
+  constructor(private router: Router) { // Inyecta Router
+
+  }
+
+  
 }

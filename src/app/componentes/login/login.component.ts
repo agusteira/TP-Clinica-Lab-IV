@@ -30,43 +30,45 @@ export class LoginComponent {
   }
 
   async IniciarSesion(correo: string, clave: string) {
-    // Validación inicial de las credenciales
     if (!correo || !clave || clave.length <= 6) {
       this.setModal("ERROR", "Error: No se pudo iniciar sesión. Verifica tus credenciales.");
       return;
     }
-  
-    this.spinner = true; // Muestra el spinner de carga
+    this.spinner = true; 
   
     try {
-      // Intentamos iniciar sesión
       const loginResult = await this.fbsvc.loguear(correo, clave);
-  
-      // Si el login fue exitoso, verificamos el tipo de usuario y navegamos
+
       if (loginResult) {
         await this.handleLoginSuccess(correo);
       }
     } catch (e: any) {
-      // Manejamos los errores
       this.handleError(e);
     } finally {
-      // Ocultamos el spinner independientemente del resultado
       this.spinner = false;
     }
   }
   
   private async handleLoginSuccess(correo: string) {
     try {
-      const tipoUsuario = await this.fbsvc.traerTipoUsuario(correo);
+      const flag = await this.fbsvc.traerFlag(correo);
+      if(flag=="true"){
+        const tipoUsuario = await this.fbsvc.traerTipoUsuario(correo);
+
       switch(tipoUsuario){
         case"paciente":
+          //TO DO: REDIRIGIR A SU HOME
+          //this.router.navigate(['/home']);
           break
         case"admin":
+          this.redirigir("admin/home")
           break
         case"especialista":
           const habilitacionEspecialista = await this.fbsvc.verificarHabilitacion(correo)
           switch(habilitacionEspecialista){
             case"aprobado":
+              //TO DO: REDIRIGIR A SU HOME
+              //this.router.navigate(['/home']);
               break
             case"pendiente":
               this.setModal("PENDIENTE", "Su usuario todavia esta pendiente de aprobacion")
@@ -77,7 +79,10 @@ export class LoginComponent {
           }
           break
       }
-      //this.router.navigate(['/home']); // Redirige al home
+      }else{
+        this.setModal("ERROR","Este usuario NO esta habilitado para entrar");
+      }
+      
     } catch (error) {
       this.setModal("ERROR","Error al obtener el tipo de usuario.");
     }
@@ -88,6 +93,7 @@ export class LoginComponent {
   
     // Verificamos si el error es por correo no verificado
     if (error.message === "El email no ha sido verificado.") {
+      this.tituloModal = "Email no verificado"
       this.errorMessage = "Por favor, verifica tu correo electrónico antes de iniciar sesión.";
     } else {
       // Manejamos errores específicos de Firebase Authentication
@@ -131,5 +137,8 @@ export class LoginComponent {
   AccesoRapido(correo:string, clave:string) {
     this.correo =correo;
     this.clave = clave;
+  }
+  redirigir(ruta:string) {
+    this.router.navigate([ruta]);
   }
 }

@@ -78,26 +78,42 @@ export class FirebaseServices {
   //===================REGISTRAR ESPECIALISTA===================
   async subirEspecialista(form: FormGroup) {
     const col = collection(this.firestore, "usuarios");
-
+  
     // Extraer valores del formulario
     const { nombre, apellido, edad, DNI, especialidad, especialidadPersonalizada, correo, clave, foto } = this.extractFormEspecialista(form);
+    
+    // Verificar si la especialidad es "otra", y en tal caso, asignar la especialidad personalizada
+    const especialidadFinal = especialidad === "otra" ? especialidadPersonalizada : especialidad;
+  
     const habilitado = "pendiente";
-    const tipoUsuario = "especialista"
-
-    let url1 = '';
-
+    const tipoUsuario = "especialista";
+  
+    let foto1 = '';
+  
     try {
       // Crear usuario y obtener resultado
       const userCreationResult = await this.createUser(correo, clave);
       if (typeof userCreationResult === 'string') {
         return userCreationResult; // Retorna el error si no se creó el usuario
       }
-
+  
       // Subir imágenes y obtener URLs
-      url1 = await this.uploadImage(foto, correo);
-      // Subir datos a Firestore
-      await this.addUserToFirestore(col, { nombre, apellido, edad, DNI, especialidad, especialidadPersonalizada, correo, clave, url1, habilitado, tipoUsuario });
-
+      foto1 = await this.uploadImage(foto, correo);
+  
+      // Subir datos a Firestore, usando la especialidad final
+      await this.addUserToFirestore(col, { 
+        nombre, 
+        apellido, 
+        edad, 
+        DNI, 
+        especialidad: especialidadFinal, // Aquí usamos la especialidadFinal
+        correo, 
+        clave, 
+        foto1, 
+        habilitado, 
+        tipoUsuario 
+      });
+  
       console.log("Datos subidos correctamente");
       return true;
     } catch (error) {
@@ -105,6 +121,7 @@ export class FirebaseServices {
       return this.handleError(error); // Manejo de errores más claro
     }
   }
+  
   private extractFormEspecialista(form: FormGroup) {
     return {
       nombre: form.get('nombre')?.value,
@@ -113,6 +130,59 @@ export class FirebaseServices {
       DNI: form.get('DNI')?.value,
       especialidad: form.get('especialidad')?.value,
       especialidadPersonalizada: form.get('especialidadPersonalizada')?.value,
+      correo: form.get('correo')?.value,
+      clave: form.get('clave')?.value,
+      foto: form.get('foto')?.value,
+    };
+  }
+
+  //===================REGISTRAR ESPECIALISTA===================
+  async subirAdmin(form: FormGroup) {
+    const col = collection(this.firestore, "usuarios");
+  
+    const { nombre, apellido, edad, DNI, correo, clave, foto } = this.extractFormAdmin(form);
+    const tipoUsuario = "admin";
+  
+    let foto1 = '';
+  
+    try {
+      // Crear usuario y obtener resultado
+      try{
+        const userCreationResult = await createUserWithEmailAndPassword(this.auth, correo, clave);
+      }catch (error) {
+        return this.handleError(error); // Maneja el error de forma centralizada
+      }
+  
+      // Subir imágenes y obtener URLs
+      foto1 = await this.uploadImage(foto, correo);
+  
+      // Subir datos a Firestore, usando la especialidad final
+      await this.addUserToFirestore(col, { 
+        nombre, 
+        apellido, 
+        edad, 
+        DNI, 
+        correo, 
+        clave, 
+        foto1, 
+        tipoUsuario,
+        flag:"true"
+      });
+  
+      console.log("Datos subidos correctamente");
+      return true;
+    } catch (error) {
+      console.error("Error al subir los datos: ", error);
+      return this.handleError(error); // Manejo de errores más claro
+    }
+  }
+  
+  private extractFormAdmin(form: FormGroup) {
+    return {
+      nombre: form.get('nombre')?.value,
+      apellido: form.get('apellido')?.value,
+      edad: form.get('edad')?.value,
+      DNI: form.get('DNI')?.value,
       correo: form.get('correo')?.value,
       clave: form.get('clave')?.value,
       foto: form.get('foto')?.value,
@@ -168,18 +238,26 @@ export class FirebaseServices {
     try {
       const res = await signInWithEmailAndPassword(this.auth, correo, clave);
       const user = res.user;
-  
-      if (user) {
-        console.log("Usuario activo");
-        if (user.emailVerified) {
-          console.log("Email verificado");
-          return true; // Inicio de sesión exitoso
-        } else {
-          console.log("Email NO verificado");
-          await this.auth.signOut();
-          throw new Error("El email no ha sido verificado.");
+      
+      if(await this.traerTipoUsuario(correo) != "admin"){
+        if (user) {
+          console.log("Usuario activo");
+          if (user.emailVerified) {
+            console.log("Email verificado");
+
+            return true; // Inicio de sesión exitoso
+          } else {
+            console.log("Email NO verificado");
+            await this.auth.signOut();
+            throw new Error("El email no ha sido verificado.");
+          }
         }
+      }else{
+        console.log("Ingreso login");
+        return true
       }
+
+      
     } catch (e) {
       console.log("Error al iniciar sesión:", e);
       throw e; // Re-lanza el error para manejarlo en el componente
@@ -201,7 +279,6 @@ export class FirebaseServices {
       // Si hay resultados, devolver el primer usuario encontrado
       const usuarioDoc = querySnapshot.docs[0]; // Usualmente, un correo será único, así que tomamos el primero
       const usuario = usuarioDoc.data();
-      console.log("Usuario encontrado:", usuario);
       return usuario;
     } catch (error) {
       console.error("Error al obtener el usuario:", error);
@@ -214,11 +291,115 @@ export class FirebaseServices {
     return usuario!['tipoUsuario']
   }
 
+  async traerFlag(correo:string){
+    const usuario = await this.traerUsuario(correo)
+    return usuario!['flag']
+  }
+
   async verificarHabilitacion(correo:string){
     const usuario = await this.traerUsuario(correo)
     return usuario!['habilitado']
   }
-  //=========================================================
+  //========================TRAER USUARIOS=================================
+
+  async traerUsuarios() {
+    const usuariosCollection = collection(this.firestore, 'usuarios'); // Acceder a la colección 'usuarios'
+
+    try {
+      const querySnapshot = await getDocs(usuariosCollection); // Obtener todos los documentos de la colección
+
+      if (querySnapshot.empty) {
+        console.log("No se encontraron usuarios.");
+        return []; // Si no hay usuarios, retornar un arreglo vacío
+      }
+
+      // Si hay documentos, mapearlos a un arreglo de usuarios
+      const usuarios = querySnapshot.docs.map(doc => {
+        return { id: doc.id, ...doc.data() }; // Devolvemos el id del documento y sus datos
+      });
+
+      return usuarios; // Devolver el arreglo de usuarios
+
+    } catch (error) {
+      console.error("Error al obtener los usuarios:", error);
+      throw new Error("Error al obtener los usuarios desde Firestore.");
+    }
+  }
+
+  async traerEspecialistasPendientes() {
+    const usuariosCollection = collection(this.firestore, 'usuarios'); // Acceder a la colección 'usuarios'
+  
+    try {
+      // Creamos la consulta para obtener solo los usuarios que son 'especialista' y tienen habilitado: 'pendiente'
+      const q = query(
+        usuariosCollection,
+        where('tipoUsuario', '==', 'especialista'), // Filtro para tipoUsuario = "especialista"
+        where('habilitado', '==', 'pendiente') // Filtro para habilitado = "pendiente"
+      );
+  
+      const querySnapshot = await getDocs(q); // Obtener los documentos que cumplen con la consulta
+  
+      if (querySnapshot.empty) {
+        console.log("No se encontraron usuarios con las condiciones especificadas.");
+        return []; // Si no hay usuarios, retornar un arreglo vacío
+      }
+  
+      // Si hay documentos, mapearlos a un arreglo de usuarios
+      const usuarios = querySnapshot.docs.map(doc => {
+        return { id: doc.id, ...doc.data() }; // Devolvemos el id del documento y sus datos
+      });
+  
+      return usuarios; // Devolver el arreglo de usuarios
+  
+    } catch (error) {
+      console.error("Error al obtener los usuarios:", error);
+      throw new Error("Error al obtener los usuarios desde Firestore.");
+    }
+  }
+
+  //========================ACTUALIZAR USUARIOS=================================
+
+  async deshabilitarusuario(usuarioId: string) {
+    const usuarioDocRef = doc(this.firestore, 'usuarios', usuarioId); // Referencia al documento del usuario
+
+    try {
+      // Actualizamos el campo "habilitado" a 'no-aceptado' o cualquier valor que indique inhabilitación
+      await updateDoc(usuarioDocRef, {
+        flag: 'false'
+      });
+      console.log('usuario inhabilitado correctamente');
+    } catch (error) {
+      console.error('Error al inhabilitar usuario:', error);
+    }
+  }
+
+  async habilitarusuario(usuarioId: string) {
+    const usuarioDocRef = doc(this.firestore, 'usuarios', usuarioId); // Referencia al documento del usuario
+
+    try {
+      // Actualizamos el campo "habilitado" a 'aceptado'
+      await updateDoc(usuarioDocRef, {
+        flag: 'true'
+      });
+      console.log('usuario habilitado correctamente');
+    } catch (error) {
+      console.error('Error al habilitar usuario:', error);
+    }
+  }
+
+  async accionEspecialistaPendiente(usuarioId: string, accion:string) {
+    const usuarioDocRef = doc(this.firestore, 'usuarios', usuarioId); // Referencia al documento del usuario
+
+    try {
+      // Actualizamos el campo "habilitado" a 'no-aceptado' o cualquier valor que indique inhabilitación
+      await updateDoc(usuarioDocRef, {
+        habilitado: accion
+      });
+      console.log('usuario cambiado correctamente');
+    } catch (error) {
+      console.error('Error al cambiar usuario:', error);
+    }
+  }
 
 
 }

@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "primer-parcial-82de0"
-  }
+    "default": "clinica-1af50",
+    "clinica": "clinica-1af50"
+  },
+  "targets": {},
+  "etags": {}
 }

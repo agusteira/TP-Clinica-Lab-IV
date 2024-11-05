@@ -1,8 +1,89 @@
 <app-nav-admin></app-nav-admin>
-<p>usuarios works!</p>
+
+<div class="container mt-4">
+
+  <!-- Card Principal -->
+  <div class="card shadow-lg">
+    <div class="card-header text-center">
+      <h3>Administración de Usuarios</h3>
+    </div>
+    <div class="card-body">
+      <!-- Botones dentro de la card -->
+      <div class="row">
+        <!-- Botón Ver Usuarios -->
+        <div class="col-md-4 mb-3">
+          <button class="btn btn-primary btn-block" (click)="seleccionarSeccion('verUsuarios')">
+            Ver Usuarios
+          </button>
+        </div>
+        <!-- Botón Habilitar Especialistas -->
+        <div class="col-md-4 mb-3">
+          <button class="btn btn-warning btn-block" (click)="seleccionarSeccion('habilitarEspecialistas')">
+            Habilitar Especialistas
+          </button>
+        </div>
+        <!-- Botón Crear Usuarios -->
+        <div class="col-md-4 mb-3">
+          <button class="btn btn-success btn-block" (click)="seleccionarSeccion('crearUsuarios')">
+            Crear Usuarios
+          </button>
+        </div>
+      </div>
+
+      <!-- Sección de Contenido Dentro de la Card -->
+      <div *ngIf="seccionActiva === 'verUsuarios'" class="mt-4">
+        <app-ver-usuarios [activarFuncion]="seccionActiva"></app-ver-usuarios>
+      </div>
+      
 
 
-Una card grande como la del login con 3 cosas:
-    -Ver usuarios (se puede deshabititarlos)
-    -Habilitar especialistas (Se habilitan los que se loguearon)
-    -Crear usuarios(Mismo coso q el registro)
+
+      <div *ngIf="seccionActiva === 'habilitarEspecialistas'" class="mt-4">
+        <app-control-especialistas [activarFuncion]="seccionActiva"></app-control-especialistas>
+        <!-- Aquí iría la lógica para habilitar/rechazar especialistas -->
+      </div>
+
+      <div *ngIf="seccionActiva === 'crearUsuarios'" class="mt-4">
+        <div class="wrapper fadeInDown">
+          <div id="formContent">
+            <!-- Título principal -->
+            <h2 style="color:white">Crear nuevo usuario</h2>
+        
+            <!-- Contenedor con flexbox para centrar los h3 -->
+            <div class="row center">
+                <h3 
+                    class="form-h3"
+                    [ngClass]="{'active': usuarioSignUp === 'paciente', 'inactive': usuarioSignUp !== 'paciente'}" 
+                    (click)="usuarioSignUp = 'paciente'">
+                    Paciente
+                </h3>
+                <h3 
+                    class="form-h3"
+                    [ngClass]="{'active': usuarioSignUp === 'especialista', 'inactive': usuarioSignUp !== 'especialista'}" 
+                    (click)="usuarioSignUp = 'especialista'">
+                    Especialista
+                </h3>
+
+                <h3 
+                    class="form-h3"
+                    [ngClass]="{'active': usuarioSignUp === 'admin', 'inactive': usuarioSignUp !== 'admin'}" 
+                    (click)="usuarioSignUp = 'admin'">
+                    Administrador
+                </h3>
+            </div>
+        
+            <!-- Componentes de registro según el tipo de usuario seleccionado -->
+            <app-register-especialista *ngIf="usuarioSignUp === 'especialista'"> </app-register-especialista>
+            <app-register-paciente *ngIf="usuarioSignUp === 'paciente'"> </app-register-paciente>
+            <app-register-admin *ngIf="usuarioSignUp === 'admin'"></app-register-admin>
+          </div>
+        
+        
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<app-spinner *ngIf="spinner"></app-spinner>

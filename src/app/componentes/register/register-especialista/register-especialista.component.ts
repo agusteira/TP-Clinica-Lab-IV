@@ -14,7 +14,7 @@ import { SpinnerComponent } from "../../../spinner/spinner.component";
   styleUrl: './register-especialista.component.scss'
 })
 export class RegisterEspecialistaComponent {
-  showErrorModal: boolean = false;
+  showErrorModal: boolean = true;
   spinner:boolean=false;
   errorMessage: string = ""
   tituloModal:string = ""
@@ -68,7 +68,6 @@ export class RegisterEspecialistaComponent {
   async RegistrarsEspecialista(){
     try{
       this.spinner = true
-      console.log(this.spinner)
       const retorno = await this.fbsvc.subirEspecialista(this.formEspecialista)
       this.spinner = false
       if(retorno == true){

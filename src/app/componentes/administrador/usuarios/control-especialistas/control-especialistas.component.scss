@@ -1,0 +1,102 @@
+/* Fondo general de la página */
+body {
+    background-color: #f7f9fc; /* Fondo suave, gris claro */
+    color: #333; /* Color de texto */
+  }
+  
+  /* Card Estilizada Principal */
+  .card {
+    border: none;
+    border-radius: 15px; /* Bordes redondeados */
+    margin-top: 20px; /* Espacio arriba de la card */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  }
+  
+  /* Header de la Card */
+  .card-header {
+    background-color: #007bff; /* Color de fondo del header de la card */
+    color: white; /* Color del texto en el header */
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+  
+  /* Body de la Card */
+  .card-body {
+    padding: 30px; /* Aumentamos el padding para que haya espacio dentro de la card */
+    background-color: #004179 !important; /* Color de fondo del header de la card */
+    color: white;
+  }
+  
+  /* Card Estilizada de los Usuarios (cards dentro del contenedor de usuarios) */
+  .card2 {
+    border: none;
+    border-radius: 25px; /* Bordes redondeados */
+    margin-top: 20px; /* Espacio arriba de la card */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave y más difusa */
+    overflow: hidden; /* Para que los bordes redondeados sean efectivos */
+  }
+  
+  /* Fondo de las Cards de los Usuarios */
+  .card2-background {
+    background-color: #012442; /* Color de fondo para toda la card */
+    color: white; /* Color de texto blanco para que sea legible */
+  }
+  
+  /* Padding del cuerpo de las cards de usuarios */
+  .card2-body {
+    padding: 30px; /* Aumentamos el padding para que haya espacio dentro de la card */
+    background-color: #012442; /* Fondo de la parte interna de la card */
+  }
+  
+  /* Imagen de las cards de los usuarios */
+  .card2-img-top, .img-fluid {
+    object-fit: cover; /* Asegura que las imágenes no se deformen */
+    border-radius: 20px; /* Bordes redondeados en las imágenes */
+  }
+  
+  /* Espaciado entre botones */
+  .row .col-md-4.mb-3 {
+    margin-bottom: 20px;
+  }
+  
+  /* Estilo de los botones */
+  button {
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 10px; /* Bordes redondeados en los botones */
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Colores de los botones */
+  button.btn-primary {
+    background-color: #007bff;
+    border: none;
+  }
+  
+  button.btn-primary:hover {
+    background-color: #0056b3; /* Sombra más oscura al pasar el mouse */
+  }
+  
+  button.btn-warning {
+    background-color: #ffc107;
+    border: none;
+  }
+  
+  button.btn-warning:hover {
+    background-color: #e0a800;
+  }
+  
+  button.btn-success {
+    background-color: #28a745;
+    border: none;
+  }
+  
+  button.btn-success:hover {
+    background-color: #218838;
+  }
+  
+  /* Espaciado de las secciones */
+  .mt-4 {
+    margin-top: 20px;
+  }
+  
