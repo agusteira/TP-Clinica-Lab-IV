@@ -2,19 +2,29 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { FirebaseServices } from '../../../services/firebase.services';
+import { SpinnerComponent } from "../../../spinner/spinner.component";
 
 @Component({
   selector: 'app-register-paciente',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, FormsModule, CommonModule, ReactiveFormsModule,],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, FormsModule, CommonModule, ReactiveFormsModule, SpinnerComponent],
   templateUrl: './register-paciente.component.html',
   styleUrl: './register-paciente.component.scss'
 })
 export class RegisterPacienteComponent {
+  showErrorModal: boolean = false;
+  errorMessage: string = ""
+  tituloModal:string = ""
+  spinner:boolean=false;
 
   formPaciente!: FormGroup;
   previewUrl1: string | ArrayBuffer | null = null;
   previewUrl2: string | ArrayBuffer | null = null;
+
+  constructor(private fbsvc: FirebaseServices){
+
+  }
 
   ngOnInit(): void {
     this.formPaciente = new FormGroup({
@@ -56,8 +66,34 @@ export class RegisterPacienteComponent {
     }
 }
 
-  RegistrarPaciente() {
-      // Implementa la lógica de registro aquí
+  async RegistrarPaciente() {
+    try{
+      this.spinner = true
+      const retorno = await this.fbsvc.subirPaciente(this.formPaciente)
+      this.spinner = false
+      if(retorno == true){
+        this.mostrarMensaje("Registro exitoso", "Verifique su mail e inicie sesion")
+        console.log(1)
+      }else{
+        this.mostrarMensaje("Registro fracasado", retorno)
+        console.log(2)
+      } 
+    }
+    catch{
+      this.mostrarMensaje("Registro fracasado", "El registro no pude llevarse a cabo de manera exitosa")
+      console.log(2)
+    }
+    
+  }
+
+  mostrarMensaje(titulo:string,mensaje:string){
+    this.showErrorModal=true;
+    this.errorMessage=mensaje
+    this.tituloModal=titulo
+  }
+
+  closeModal() {
+    this.showErrorModal = false; // Ocultar el modal
   }
 
 }

@@ -343,10 +343,73 @@ select:hover {
 .preview-image {
   margin-top: 10px;
   margin-bottom: 10px;
-  max-width: 100%;
+  max-width: 75%;
+  max-height: 200px;
   height: auto;
   border-radius: 5px;
   background-color: white;
   padding: 5px;
 }
 
+
+//=========================MODAL============================
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Hacer el fondo opaco */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001; /* Asegura que el modal esté sobre el contenido */
+}
+
+/* Contenido del modal */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 1002;
+  width: 30%;
+  
+}
+
+/* Botón de cerrar en el modal */
+.modal-content button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #012442;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  
+}
+
+.modal-content button:hover {
+  background-color: #004080;
+}
+
+.auto-fill-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.auto-fill-buttons button {
+  padding: 20px 30px;
+  background-color: #012442;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  border-radius: 15px;
+  margin-left:15px
+}
+
+.auto-fill-buttons button:hover {
+  background-color: #004080;
+}

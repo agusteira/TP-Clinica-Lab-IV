@@ -86,3 +86,14 @@
 
     <input type="submit" class="fadeIn fourth" value="Registrarse" [disabled]="formEspecialista.invalid">
 </form>
+
+<!-- Modal -->
+<div *ngIf="showErrorModal" class="modal-overlay">
+	<div class="modal-content">
+	  <h2>{{tituloModal}}</h2>
+	  <p>{{ errorMessage }}</p>
+	  <button (click)="closeModal()">Cerrar</button>
+	</div>
+  </div>
+
+<app-spinner *ngIf="spinner"></app-spinner>

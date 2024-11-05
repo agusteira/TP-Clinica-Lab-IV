@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/tp-clinica/browser",
+    "public": "dist/primer-parcial/browser",
     "ignore": [
       "firebase.json",
       "**/.*",

@@ -62,7 +62,6 @@
         <label for="fotoInput" class="custom-file-upload">
             <span id="file-name">Seleccionar Imagen 1</span>
         </label>
-        <img *ngIf="previewUrl1" [src]="previewUrl1" alt="Vista previa 1" class="preview-image">
         <small class="text-danger" *ngIf="formPaciente.get('foto')?.hasError('required') && formPaciente.get('foto')?.touched">
             La foto es obligatoria
         </small>
@@ -73,12 +72,28 @@
         <label for="fotoInputDos" class="custom-file-upload">
             <span id="file-name">Seleccionar Imagen 2</span>
         </label>
-        <img *ngIf="previewUrl2" [src]="previewUrl2" alt="Vista previa 2" class="preview-image">
+        
         <small class="text-danger" *ngIf="formPaciente.get('fotoDos')?.hasError('required') && formPaciente.get('fotoDos')?.touched">
             La foto es obligatoria
         </small>
+    </div>
+
+    <div>
+        <img *ngIf="previewUrl1" [src]="previewUrl1" alt="Vista previa 1" class="preview-image">
+        <img *ngIf="previewUrl2" [src]="previewUrl2" alt="Vista previa 2" class="preview-image">
     </div>
     
 
     <input type="submit" class="fadeIn fourth" value="Registrarse" [disabled]="formPaciente.invalid">
 </form>
+
+<!-- Modal de error -->
+<div *ngIf="showErrorModal" class="modal-overlay">
+	<div class="modal-content">
+	  <h2>{{tituloModal}}</h2>
+	  <p>{{ errorMessage }}</p>
+	  <button (click)="closeModal()">Cerrar</button>
+	</div>
+  </div>
+  
+<app-spinner *ngIf="spinner"></app-spinner>
