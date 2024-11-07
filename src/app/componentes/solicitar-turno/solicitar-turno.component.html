@@ -1,0 +1,62 @@
+<app-nav-paciente></app-nav-paciente>
+<div class="solicitar-turno-card">
+  <h2>Solicitar Turno</h2>
+
+  <form (ngSubmit)="solicitarTurno()">
+    <div>
+      <label>Especialidad:</label>
+      <div class="options-container">
+        <div 
+          *ngFor="let especialidad of especialidades" 
+          (click)="selectedEspecialidad = especialidad; cargarEspecialistas()" 
+          [class.selected]="especialidad === selectedEspecialidad"
+          class="option-item">
+          {{ especialidad }}
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="selectedEspecialidad">
+      <label>Especialista:</label>
+      <div class="options-container">
+        <div 
+          *ngFor="let especialista of especialistas" 
+          (click)="selectedEspecialista = especialista.id; onEspecialistaChange(); generarFechasDisponibles()"
+          [class.selected]="especialista.id === selectedEspecialista"
+          class="option-item">
+          {{ especialista.nombre }}
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="selectedEspecialista">
+      <label>Fecha:</label>
+      <div class="options-container">
+        <div 
+          *ngFor="let fecha of fechasDisponibles" 
+          (click)="selectedFecha = fecha; cargarHorarios()" 
+          [class.selected]="fecha === selectedFecha"
+          class="option-item">
+          {{ fecha }}
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="selectedFecha">
+      <label>Hora:</label>
+      <div class="options-container">
+        <div 
+          *ngFor="let hora of turnosDisponibles" 
+          (click)="selectedHora = hora" 
+          [class.selected]="hora === selectedHora"
+          class="option-item">
+          {{ hora }}
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button type="submit" [disabled]="!selectedHora">Solicitar Turno</button>
+    </div>
+  </form>
+</div>

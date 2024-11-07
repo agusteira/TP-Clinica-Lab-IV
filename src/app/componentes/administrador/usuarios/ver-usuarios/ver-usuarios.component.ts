@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { FirebaseServices } from '../../../../services/firebase.services';
 import { SpinnerComponent } from "../../../../spinner/spinner.component";
+import { EspecialidadPipe } from '../../../../pipelines/especialidad.pipe';
 
 @Component({
   selector: 'app-ver-usuarios',
   standalone: true,
-  imports: [CommonModule, SpinnerComponent],
+  imports: [CommonModule, SpinnerComponent, EspecialidadPipe],
   templateUrl: './ver-usuarios.component.html',
   styleUrl: './ver-usuarios.component.scss'
 })

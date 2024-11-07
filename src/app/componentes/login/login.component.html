@@ -1,36 +1,36 @@
 <app-nav-default></app-nav-default>
+
 <div class="wrapper fadeInDown">
-	<div id="formContent">
-		<h2 style="color:white">Iniciar sesion</h2>
-		<!-- Login Form -->
-		<form>
-			<input type="text" id="login" class="fadeIn second" name="login" placeholder="Correo" [(ngModel)]="correo">
-			<input type="password" id="password" class="fadeIn third" name="password" placeholder="Password" [(ngModel)]="clave">
-			<input type="submit" class="fadeIn fourth" value="Iniciar sesion" routerLinkActive="active-route" (click)="IniciarSesion(correo, clave)">
-		</form>
+  <div id="formContent">
+    <h2 style="color:white">Iniciar sesión</h2>
+    <!-- Login Form -->
+    <form>
+      <input type="text" id="login" class="fadeIn second" name="login" placeholder="Correo" [(ngModel)]="correo">
+      <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password" [(ngModel)]="clave">
+      <input type="submit" class="fadeIn fourth" value="Iniciar sesión" routerLinkActive="active-route" (click)="IniciarSesion(correo, clave)">
+    </form>
 
-		<!-- Remind Passowrd -->
-		<div id="formFooter">
-		<a class="underlineHover" [routerLink]="['/register']">Todavia no tienes una cuenta? Click aqui!</a>
-		</div>
+    <!-- Remind Passowrd -->
+    <div id="formFooter">
+      <a class="underlineHover" [routerLink]="['/register']">¿Todavía no tienes una cuenta? ¡Haz click aquí!</a>
+    </div>
+  </div>
 
-	</div>
-
-	<div class="auto-fill-buttons">
-		<button (click)="AccesoRapido('admin@admin.com', '1234567')">ADMIN</button>
-		<button (click)="AccesoRapido('especialista@especialista.com', '111111')">ESPECIALISTA</button>
-		<button (click)="AccesoRapido('paciente@paciente.com', '111111')">PACIENTE</button>
-	
-	</div>
+  <!-- Botones de Acceso rápido -->
+  <div class="auto-fill-buttons">
+    <button *ngFor="let usuario of usuarios" (click)="AccesoRapido(usuario.correo, usuario.clave)">
+      <img [src]="usuario.imagen" alt="Imagen de perfil" class="profile-img">
+    </button>
+  </div>
 </div>
 
 <!-- Modal de error -->
 <div *ngIf="showErrorModal" class="modal-overlay">
-	<div class="modal-content">
-	  <h2>{{tituloModal}}</h2>
-	  <p>{{ errorMessage }}</p>
-	  <button (click)="closeModal()">Cerrar</button>
-	</div>
+  <div class="modal-content">
+    <h2>{{tituloModal}}</h2>
+    <p>{{ errorMessage }}</p>
+    <button (click)="closeModal()">Cerrar</button>
   </div>
-  
-  <app-spinner *ngIf="spinner"></app-spinner>
+</div>
+
+<app-spinner *ngIf="spinner"></app-spinner>

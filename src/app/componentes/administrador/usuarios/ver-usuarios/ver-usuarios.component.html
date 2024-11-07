@@ -20,7 +20,7 @@
 
             <!-- Datos adicionales si es especialista -->
             <div *ngIf="usuario.tipoUsuario === 'especialista'">
-              <p><strong>Especialidad:</strong> {{ usuario.especialidad }}</p>
+              <p><strong>Especialidad:</strong> {{ usuario.especialidades | especialidad }}</p>
               <p><strong>Habilitado:</strong> {{ usuario.habilitado }}</p>
             </div>
 

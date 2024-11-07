@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } 
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { FirebaseServices } from '../../../services/firebase.services';
 import { SpinnerComponent } from "../../../spinner/spinner.component";
+import { edadMayorDe18 } from '../../../validators/validatorEdad.validator';
 
 @Component({
   selector: 'app-register-paciente',
@@ -30,8 +31,8 @@ export class RegisterPacienteComponent {
     this.formPaciente = new FormGroup({
       nombre: new FormControl("", [Validators.required, Validators.pattern('^[a-zA-Z]+$')]),
       apellido: new FormControl("", [Validators.required, Validators.pattern('^[a-zA-Z]+$')]),
-      edad: new FormControl("", [Validators.required, Validators.pattern('^[0-9]+$')]), // Acepta solo números
-      DNI: new FormControl("", [Validators.required, Validators.pattern('^[0-9]+$')]), // Acepta solo números
+      edad: new FormControl("", [Validators.required, Validators.pattern('^[0-9]+$'), edadMayorDe18()]), // Acepta solo números
+      DNI: new FormControl("", [Validators.required, Validators.pattern('^[0-9]{8}$')]), // Acepta solo números
       obraSocial: new FormControl("", Validators.required), // Nueva propiedad
       correo: new FormControl("", [Validators.required, Validators.email]),
       clave: new FormControl("", [Validators.required, Validators.minLength(7)]),

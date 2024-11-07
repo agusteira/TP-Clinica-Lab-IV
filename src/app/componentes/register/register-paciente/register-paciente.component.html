@@ -21,13 +21,17 @@
             <br>
             <small class="text-danger">La edad debe ser un número</small>
         </ng-container>
+        <ng-container *ngIf="formPaciente.get('edad')?.hasError('mayorDe18') && formPaciente.get('edad')?.touched">
+            <br>
+            <small class="text-danger">Debes tener más de 18 años.</small>
+          </ng-container>
     </div>
 
     <div id="DNI">
         <input type="text" class="fadeIn third" name="DNI" placeholder="DNI" formControlName="DNI">
         <ng-container *ngIf="formPaciente.get('DNI')?.hasError('pattern') && formPaciente.get('DNI')?.touched">
             <br>
-            <small class="text-danger">El DNI debe ser un número</small>
+            <small class="text-danger">DNI invalido</small>
         </ng-container>
     </div>
 

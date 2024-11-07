@@ -8,11 +8,12 @@ import { ControlEspecialistasComponent } from "./control-especialistas/control-e
 import { RegisterEspecialistaComponent } from "../../register/register-especialista/register-especialista.component";
 import { RegisterPacienteComponent } from "../../register/register-paciente/register-paciente.component";
 import { RegisterAdminComponent } from "../../register/register-admin/register-admin.component";
+import { LandingComponent } from "../../landing/landing.component";
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [NavAdminComponent, CommonModule, SpinnerComponent, VerUsuariosComponent, ControlEspecialistasComponent, RegisterEspecialistaComponent, RegisterPacienteComponent, RegisterAdminComponent],
+  imports: [NavAdminComponent, CommonModule, SpinnerComponent, VerUsuariosComponent, ControlEspecialistasComponent, RegisterEspecialistaComponent, RegisterPacienteComponent, RegisterAdminComponent, LandingComponent],
   templateUrl: './usuarios.component.html',
   styleUrl: './usuarios.component.scss'
 })

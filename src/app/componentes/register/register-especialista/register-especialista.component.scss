@@ -67,7 +67,8 @@ h3.active {
 input[type=button], input[type=submit], input[type=reset]  {
   background-color: #56baed;
   border: none;
-  color: white;
+  color: black;
+  font-weight: bold;
   padding: 15px 80px;
   text-align: center;
   text-decoration: none;
@@ -88,6 +89,7 @@ input[type=button], input[type=submit], input[type=reset]  {
 
 input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
   background-color: #39ace7;
+  //color: black;
 }
 
 input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
@@ -413,4 +415,68 @@ select:hover {
 
 .auto-fill-buttons button:hover {
   background-color: #004080;
+}
+
+.especialidad{
+  margin:20px;
+}
+.TextosCositos{
+  margin:5px;
+}
+
+/* Estilo para los inputs de especialidades personalizadas */
+#especialidadPersonalizada input[type="text"] {
+  background-color: #f6f6f6;
+  border: none;
+  padding: 15px 32px;
+  margin-bottom: 10px;
+  width: 85%;
+  border: 2px solid #f6f6f6;
+  transition: all 0.5s ease-in-out;
+  border-radius: 5px;
+}
+
+#especialidadPersonalizada input[type="text"]:focus {
+  background-color: #fff;
+  border-bottom: 2px solid #5fbae9;
+}
+
+/* Estilo para el botón "Eliminar" */
+#especialidadPersonalizada button {
+  background-color: #ff4d4d;
+  color: black;
+  font-weight: bold;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#especialidadPersonalizada button:hover {
+  background-color: #ff1a1a;
+}
+
+#especialidadPersonalizada button:focus {
+  outline: none;
+}
+
+/* Asegurarse de que el botón "Agregar Especialidad" se vea similar al resto */
+#especialidadPersonalizada button[type="button"] {
+  background-color: #56baed;
+  color: black;
+  font-weight: bold;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+#especialidadPersonalizada button[type="button"]:hover {
+  background-color: #4a9ddf;
+}
+
+.especialidadesDeLosUsuarios{
+  color:white
 }

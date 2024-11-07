@@ -330,3 +330,45 @@ input[type=text]:placeholder {
 .auto-fill-buttons button:hover {
   background-color: #004080;
 }
+
+
+/* Estilo para los botones de acceso rápido */
+.auto-fill-buttons {
+  margin-left: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: absolute;
+  top: 1%;
+  right: 20px;
+}
+
+.auto-fill-buttons button {
+  width: 80px; /* Tamaño de los botones cuadrados */
+  height: 80px; /* Tamaño de los botones cuadrados */
+  background-color: #012442;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px; /* Espaciado entre los botones */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.auto-fill-buttons button:hover {
+  background-color: #004080;
+}
+
+.profile-img {
+  width: 60px; /* Tamaño de la imagen */
+  height: 60px; /* Tamaño de la imagen */
+  object-fit: cover; /* Asegura que la imagen cubra el círculo */
+}
+.auto-fill-buttons button span {
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: center;
+}
+

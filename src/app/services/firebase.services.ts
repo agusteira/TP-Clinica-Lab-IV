@@ -14,8 +14,6 @@ export class FirebaseServices {
 
   constructor(private firestore: Firestore, private storage:Storage) { }
 
-
-
   //===================REGISTRAR PACIENTE===================
   async subirPaciente(form: FormGroup) {
     const col = collection(this.firestore, "usuarios");
@@ -38,7 +36,7 @@ export class FirebaseServices {
       url2 = await this.uploadImage(foto2, correo);
 
       // Subir datos a Firestore
-      await this.addUserToFirestore(col, { nombre, apellido, edad, DNI, obraSocial, correo, clave, foto1: url1, foto2: url2, tipoUsuario });
+      await this.addUserToFirestore(col, { nombre, apellido, edad, DNI, obraSocial, correo, clave, foto1: url1, foto2: url2, tipoUsuario, flag:"true" });
 
       console.log("Datos subidos correctamente");
       return true;
@@ -76,49 +74,72 @@ export class FirebaseServices {
 
 
   //===================REGISTRAR ESPECIALISTA===================
-  async subirEspecialista(form: FormGroup) {
+  async subirEspecialista(form: FormGroup, especialidadesSeleccionadas: string[]) {
     const col = collection(this.firestore, "usuarios");
   
     // Extraer valores del formulario
-    const { nombre, apellido, edad, DNI, especialidad, especialidadPersonalizada, correo, clave, foto } = this.extractFormEspecialista(form);
-    
-    // Verificar si la especialidad es "otra", y en tal caso, asignar la especialidad personalizada
-    const especialidadFinal = especialidad === "otra" ? especialidadPersonalizada : especialidad;
+    const { nombre, apellido, edad, DNI, correo, clave, foto } = this.extractFormEspecialista(form);
   
     const habilitado = "pendiente";
     const tipoUsuario = "especialista";
-  
     let foto1 = '';
   
     try {
       // Crear usuario y obtener resultado
       const userCreationResult = await this.createUser(correo, clave);
       if (typeof userCreationResult === 'string') {
-        return userCreationResult; // Retorna el error si no se creó el usuario
+        return userCreationResult;
       }
   
       // Subir imágenes y obtener URLs
       foto1 = await this.uploadImage(foto, correo);
   
-      // Subir datos a Firestore, usando la especialidad final
-      await this.addUserToFirestore(col, { 
-        nombre, 
-        apellido, 
-        edad, 
-        DNI, 
-        especialidad: especialidadFinal, // Aquí usamos la especialidadFinal
-        correo, 
-        clave, 
-        foto1, 
-        habilitado, 
-        tipoUsuario 
+      // Subir datos a Firestore, incluyendo las especialidades seleccionadas
+      await this.addUserToFirestore(col, {
+        nombre,
+        apellido,
+        edad,
+        DNI,
+        especialidades: especialidadesSeleccionadas, // Guardamos las especialidades seleccionadas
+        correo,
+        clave,
+        foto1,
+        habilitado,
+        tipoUsuario,
+        flag:"true"
       });
+
+      await this.crearHorariosEspecialista(correo, especialidadesSeleccionadas);
   
       console.log("Datos subidos correctamente");
       return true;
     } catch (error) {
       console.error("Error al subir los datos: ", error);
-      return this.handleError(error); // Manejo de errores más claro
+      return this.handleError(error);
+    }
+  }
+
+  private async crearHorariosEspecialista(correo: string, especialidades: string[]) {
+    const horariosCollection = collection(this.firestore, "HorariosEspecialistas");
+  
+    // Definir horarios por defecto para cada día
+    const disponibilidad = [
+      { dia: "lunes", horarios: [{ inicio: "08:00", fin: "19:00" }] },
+      { dia: "martes", horarios: [{ inicio: "08:00", fin: "19:00" }] },
+      { dia: "miércoles", horarios: [{ inicio: "08:00", fin: "19:00" }] },
+      { dia: "jueves", horarios: [{ inicio: "08:00", fin: "19:00" }] },
+      { dia: "viernes", horarios: [{ inicio: "08:00", fin: "19:00" }] },
+      { dia: "sábado", horarios: [{ inicio: "08:00", fin: "14:00" }] }
+    ];
+  
+    // Crear un documento de horarios para cada especialidad seleccionada
+    for (const especialidad of especialidades) {
+      await addDoc(horariosCollection, {
+        correo,
+        especialidad,
+        disponibilidad,
+        duracionTurno: 30
+      });
     }
   }
   

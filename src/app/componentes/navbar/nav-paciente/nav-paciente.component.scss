@@ -1,0 +1,17 @@
+.center {
+    margin: auto;
+    color: white;
+}
+
+.fondo {
+    background: #012442 !important;
+}
+
+.nav-link {
+    color: rgb(162, 162, 162) !important; 
+}
+
+.nav-link:hover {
+    color: #f8f9fa; /* Color de texto al pasar el ratón (opcional) */
+    cursor: pointer; /* Asegúrate de que el cursor sea puntero también en hover */
+}

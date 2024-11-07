@@ -1,0 +1,37 @@
+<app-nav-paciente></app-nav-paciente>
+<div class="card-mis-turnos">
+  <h2>Mis Turnos</h2>
+
+  <div class="filtros">
+    <label>Filtrar por Especialidad:</label>
+    <input type="text" [(ngModel)]="filtroEspecialidad" placeholder="Ingrese especialidad">
+    <label>Filtrar por Especialista:</label>
+    <input type="text" [(ngModel)]="filtroEspecialista" placeholder="Ingrese especialista">
+  </div>
+  
+  <table class="tabla-turnos">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Especialidad</th>
+        <th>Especialista</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let turno of turnos | filtroTurnos: filtroEspecialidad : filtroEspecialista">
+        <td>{{ turno.fecha }}</td>
+        <td>{{ turno.horaInicio }} - {{ turno.horaFin }}</td>
+        <td>{{ turno.especialidad }}</td>
+        <td>{{ turno.nombreEspecialista }}</td>
+        <td>{{ turno.estado }}</td>
+        <td>
+          <button *ngIf="turno.estado === 'pendiente'" class="btn btn-danger" (click)="cancelarTurno(turno.id)">Cancelar</button>
+          <button *ngIf="turno.estado === 'realizado'" (click)="completarEncuesta(turno.id)">Completar Encuesta</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
