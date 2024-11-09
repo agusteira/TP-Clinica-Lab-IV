@@ -312,6 +312,12 @@ export class FirebaseServices {
     return usuario!['tipoUsuario']
   }
 
+  async traerNombreApellido(correo:string){
+    const usuario = await this.traerUsuario(correo)
+    const nombre = usuario!['nombre'] + " " + usuario!['apellido']
+    return nombre
+  }
+
   async traerFlag(correo:string){
     const usuario = await this.traerUsuario(correo)
     return usuario!['flag']

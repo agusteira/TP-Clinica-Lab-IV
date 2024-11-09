@@ -6,11 +6,13 @@
     width: 100%;
     max-width: 600px;
     margin: 20px auto;
+    background-color: #004179 !important; 
+    color:white
   }
   
   .solicitar-turno-card h2 {
     text-align: center;
-    color: #012442;
+    color: white;
   }
   
   form {
@@ -24,7 +26,7 @@
   
   label {
     font-weight: bold;
-    color: #333;
+    color: white;
   }
   
   select {
@@ -36,8 +38,9 @@
   }
   
   button {
-    background-color: #012442;
+    background-color: #28a745;
     color: white;
+    font-weight: bold;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -46,11 +49,12 @@
   }
   
   button:hover {
-    background-color: #004080;
+    background-color: #1d7431;
   }
   
   button:disabled {
-    background-color: #ccc;
+    background-color:  #444444;
+    color:white;
     cursor: not-allowed;
   }
   
@@ -67,6 +71,7 @@
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s;
+    color:black
   }
   
   .option-item:hover {

@@ -25,6 +25,18 @@ export class VerTurnosComponent {
   filtroEspecialista: string = '';
 
 
+  //modal
+  showModal: boolean = false;
+  modalTitle: string = '';
+  modalComment: string = '';
+  accion: string = '';
+  turnoId: string | null = null;
+
+  //Modal2
+  showComentarioModal = false;
+  comentariosEspecialista: string | null = null;
+  motivoCancelacion: string | null = null;
+
   constructor(
     private firestore: Firestore,
     private auth: Auth,
@@ -114,4 +126,74 @@ export class VerTurnosComponent {
       this.aplicarFiltros();
     }
   }
+
+  abrirModal(accion: string, turnoId: string) {
+    this.accion = accion;
+    this.turnoId = turnoId;
+    this.modalComment = '';
+    
+    switch (accion) {
+      case 'cancelar':
+        
+        this.modalTitle = 'Cancelar Turno';
+        break;
+      case 'rechazar':
+        this.modalTitle = 'Rechazar Turno';
+        break;
+      case 'finalizar':
+        this.modalTitle = 'Finalizar Turno';
+        break;
+      case 'aceptar':
+        this.modalTitle = 'Aceptar Turno';
+        break;
+      case 'verResena':
+        this.modalTitle = 'Reseña del Turno';
+        const turno = this.turnos.find(t => t.id === turnoId);
+        this.modalComment = turno?.comentariosEspecialista || '';
+        break;
+    }
+    
+    this.showModal = true;
+  }
+
+  cerrarModal() {
+    this.showModal = false;
+  }
+
+  async confirmarAccion() {
+    if (!this.turnoId) return;
+    const turnoDocRef = doc(this.firestore, 'Turnos', this.turnoId);
+
+    switch (this.accion) {
+      case 'cancelar':
+        await updateDoc(turnoDocRef, { estado: 'cancelado', motivoCancelacion: this.modalComment });
+        break;
+      case 'rechazar':
+        await updateDoc(turnoDocRef, { estado: 'rechazado', motivoRechazo: this.modalComment });
+        break;
+      case 'finalizar':
+        await updateDoc(turnoDocRef, { estado: 'realizado', comentariosEspecialista: this.modalComment });
+        break;
+      case 'aceptar':
+        await updateDoc(turnoDocRef, { estado: 'aceptado' });
+        break;
+    }
+
+    this.cerrarModal();
+    await this.cargarTurnos(); // Actualiza la lista de turnos
+  }
+
+  verComentario(comentariosEspecialista: string | null, motivoCancelacion: string | null): void {
+    this.comentariosEspecialista = comentariosEspecialista && comentariosEspecialista.trim() ? comentariosEspecialista : null;
+    this.motivoCancelacion = motivoCancelacion && motivoCancelacion.trim() ? motivoCancelacion : null;
+    this.showComentarioModal = true;
+  }
+
+  // Método para cerrar el nuevo modal de comentarios
+  cerrarComentarioModal(): void {
+    this.showComentarioModal = false;
+    this.comentariosEspecialista = null;
+    this.motivoCancelacion = null;
+  }
+
 }

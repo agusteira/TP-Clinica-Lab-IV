@@ -20,7 +20,7 @@
         <th>Acciones</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="tabla">
       <tr *ngFor="let turno of turnos | filtroTurnos: filtroEspecialidad : filtroEspecialista">
         <td>{{ turno.fecha }}</td>
         <td>{{ turno.horaInicio }} - {{ turno.horaFin }}</td>
@@ -28,10 +28,38 @@
         <td>{{ turno.nombreEspecialista }}</td>
         <td>{{ turno.estado }}</td>
         <td>
-          <button *ngIf="turno.estado === 'pendiente'" class="btn btn-danger" (click)="cancelarTurno(turno.id)">Cancelar</button>
-          <button *ngIf="turno.estado === 'realizado'" (click)="completarEncuesta(turno.id)">Completar Encuesta</button>
+          <button *ngIf="turno.estado != 'cancelado' && turno.estado != 'realizado'" class="btn btn-danger" (click)="abrirModal('cancelar', turno.id)">Cancelar</button>
+          <button class="btn btn-warning" style="color:black" *ngIf="turno.estado == 'realizado' && (turno?.resena?.length > 0)" (click)="completarEncuesta(turno.id)">Completar Encuesta</button>
+          <button class="btn btn-warning" style="color:black" *ngIf="turno.estado === 'realizado'" (click)="calificarAtencion(turno.id)">Calificar atención</button>
+          <button 
+              class="btn btn-info" 
+              *ngIf="(turno?.comentariosEspecialista?.length > 0) || (turno?.motivoCancelacion?.length > 0)" 
+              (click)="verComentario(turno.comentariosEspecialista, turno.motivoCancelacion)">
+              Ver comentarios
+          </button>
         </td>
       </tr>
     </tbody>
   </table>
+</div>
+
+<!-- Modal original para confirmación y comentarios -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <h3>{{ modalTitle }}</h3>
+    <textarea [(ngModel)]="modalComment" *ngIf="accion !== 'verResena'" rows="4" placeholder="Ingrese su comentario"></textarea>
+    <p *ngIf="accion === 'verResena'">{{ modalComment }}</p>
+    <button (click)="confirmarAccion()" *ngIf="accion !== 'verResena'" class="btn btn-primary">Confirmar</button>
+    <button (click)="cerrarModal()" class="btn btn-secondary">Cerrar</button>
+  </div>
+</div>
+
+<!-- Nuevo Modal para Ver Comentarios -->
+<div class="modal" *ngIf="showComentarioModal">
+  <div class="modal-content">
+    <h3>Comentarios del Turno</h3>
+    <p *ngIf="comentariosEspecialista">Comentario del Especialista: {{ comentariosEspecialista }}</p>
+    <p *ngIf="motivoCancelacion">Motivo de Cancelación: {{ motivoCancelacion }}</p>
+    <button (click)="cerrarComentarioModal()" class="btn btn-secondary">Cerrar</button>
+  </div>
 </div>

@@ -75,8 +75,7 @@ export class LoginComponent {
           const habilitacionEspecialista = await this.fbsvc.verificarHabilitacion(correo)
           switch(habilitacionEspecialista){
             case"aprobado":
-              //TO DO: REDIRIGIR A SU HOME
-              //this.router.navigate(['/home']);
+              this.router.navigate(['/especialista/home']);
               break
             case"pendiente":
               this.setModal("PENDIENTE", "Su usuario todavia esta pendiente de aprobacion")

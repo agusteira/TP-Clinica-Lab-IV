@@ -7,7 +7,9 @@ import { AdminHomeComponent } from './componentes/administrador/admin-home/admin
 import { HomeComponent } from './componentes/home/home.component';
 import { HomePacienteComponent } from './componentes/paciente/home-paciente/home-paciente.component';
 import { SolicitarTurnoComponent } from './componentes/solicitar-turno/solicitar-turno.component';
-import { VerTurnosComponent } from './componentes/ver-turnos/ver-turnos.component';
+import { VerTurnosComponent } from './componentes/paciente/ver-turnos/ver-turnos.component';
+import { HomeEspecialistaComponent } from './componentes/especialista/home/home.component';
+import { VerTurnosEspecialistaComponent } from './componentes/especialista/ver-turnos-especialista/ver-turnos-especialista.component';
 
 export const routes: Routes = [
     { path: 'landing', component: HomeComponent },
@@ -35,6 +37,17 @@ export const routes: Routes = [
             },
             {
                 path:"mis-turnos", component: VerTurnosComponent
+            }
+        ]
+    },
+    {
+        path:"especialista",
+        children:[
+            {
+                path:"home", component: HomeEspecialistaComponent
+            },
+            {
+                path:"mis-turnos", component: VerTurnosEspecialistaComponent
             }
         ]
     },
