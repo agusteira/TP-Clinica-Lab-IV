@@ -112,6 +112,12 @@
       </small>
     </div>
   
+    <div class="form-group text-center">
+      <div class="d-flex justify-content-center">
+          <ngx-recaptcha2 #captchaElem [siteKey]="siteKey" formControlName="recaptcha"></ngx-recaptcha2>
+      </div>
+  </div>
+
     <!-- Submit -->
     <input type="submit" class="fadeIn fourth" value="Registrarse" [disabled]="formEspecialista.invalid">
   </form>

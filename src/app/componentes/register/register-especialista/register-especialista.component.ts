@@ -6,15 +6,21 @@ import { NavDefaultComponent } from '../../navbar/nav-default/nav-default.compon
 import { FirebaseServices } from '../../../services/firebase.services';
 import { SpinnerComponent } from "../../../spinner/spinner.component";
 import { edadMayorDe18 } from '../../../validators/validatorEdad.validator';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 @Component({
   selector: 'app-register-especialista',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, FormsModule, CommonModule, ReactiveFormsModule, NavDefaultComponent, SpinnerComponent],
+  imports: [NgxCaptchaModule, RouterOutlet, RouterLink, RouterLinkActive, FormsModule, CommonModule, ReactiveFormsModule, NavDefaultComponent, SpinnerComponent],
   templateUrl: './register-especialista.component.html',
   styleUrl: './register-especialista.component.scss'
 })
 export class RegisterEspecialistaComponent {
+
+  //=========CAPTCHA=============
+  siteKey: string = "6LdBZ3YqAAAAALLmG7Jp4zxYIjoHbsSsqAr12t2-"
+
+  //=========CAPTCHA=============
   showErrorModal: boolean = false;
   spinner: boolean = false;
   errorMessage: string = ""
@@ -43,6 +49,7 @@ export class RegisterEspecialistaComponent {
       correo: new FormControl("", [Validators.required, Validators.email]),
       clave: new FormControl("", [Validators.required, Validators.minLength(7)]),
       foto: new FormControl("", Validators.required),
+      recaptcha: new FormControl("", Validators.required)
     });
   }
 
@@ -86,6 +93,8 @@ export class RegisterEspecialistaComponent {
 
       if (retorno == true) {
         this.mostrarMensaje("Registro exitoso", "Verifique su mail e inicie sesión");
+        this.formEspecialista.reset();  
+        this.previewUrl = null;   
       } else {
         this.mostrarMensaje("Registro fracasado", retorno);
       }

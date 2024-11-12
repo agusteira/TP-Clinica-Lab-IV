@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
@@ -15,6 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    provideStorage(() => getStorage()), provideFirebaseApp(() => initializeApp({"projectId":"clinica-1af50","appId":"1:468867245562:web:32c5d8c98cb0209c7a3043","storageBucket":"clinica-1af50.firebasestorage.app","apiKey":"AIzaSyD5ML0Gc6TWNAkg0iqggSTq07RnS1sdkUs","authDomain":"clinica-1af50.firebaseapp.com","messagingSenderId":"468867245562"})), provideAuth(() => getAuth()), provideFirestore(() => getFirestore()), provideStorage(() => getStorage())
+    provideStorage(() => getStorage()),
+    provideFirebaseApp(() => initializeApp({"projectId":"clinica-1fd9a","appId":"1:57064915784:web:9b0486fce89c520b2c297d","storageBucket":"clinica-1fd9a.firebasestorage.app","apiKey":"AIzaSyCy3xdgzcTmR2_Kr1wnkjRTGDkErd02GXY","authDomain":"clinica-1fd9a.firebaseapp.com","messagingSenderId":"57064915784"})), provideAuth(() => getAuth()), provideFirestore(() => getFirestore()), provideStorage(() => getStorage()),
   ]
 };
