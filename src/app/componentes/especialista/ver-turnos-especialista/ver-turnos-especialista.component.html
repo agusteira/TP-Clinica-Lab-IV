@@ -51,8 +51,11 @@
           </button>
 
           <!-- Botón Ver Reseña (si el turno tiene comentarios) -->
-          <button *ngIf="turno.comentariosEspecialista" class="btn btn-info" (click)="abrirModal('verResena', turno.id)">
-            Ver Reseña
+          <button 
+              class="btn btn-info" 
+              *ngIf="(turno?.comentariosEspecialista?.length > 0) || (turno?.motivoCancelacion?.length > 0) || (turno.calificacion?.length > 0)" 
+              (click)="verComentario(turno.comentariosEspecialista, turno.motivoCancelacion, turno.calificacion)">
+              Ver comentarios
           </button>
         </td>
       </tr>
@@ -64,9 +67,22 @@
 <div class="modal" *ngIf="showModal">
   <div class="modal-content">
     <h3>{{ modalTitle }}</h3>
-    <textarea [(ngModel)]="modalComment" *ngIf="accion !== 'verResena'" rows="4" placeholder="Ingrese su comentario"></textarea>
+    <textarea [(ngModel)]="modalComment" *ngIf="accion !== 'verResena' && accion !== 'aceptar'" rows="4" placeholder="Ingrese su comentario"></textarea>
     <p *ngIf="accion === 'verResena'">{{ modalComment }}</p>
     <button (click)="confirmarAccion()" *ngIf="accion !== 'verResena'" class="btn btn-primary">Confirmar</button>
     <button (click)="cerrarModal()" class="btn btn-secondary">Cerrar</button>
   </div>
 </div>
+
+<!-- Nuevo Modal para Ver Comentarios -->
+<div class="modal" *ngIf="showComentarioModal">
+  <div class="modal-content">
+    <h3>Comentarios del Turno</h3>
+    <p *ngIf="comentariosEspecialista">Comentario del Especialista: {{ comentariosEspecialista }}</p>
+    <p *ngIf="motivoCancelacion">Motivo de Cancelación: {{ motivoCancelacion }}</p>
+    <p *ngIf="calificacionAtencion">Calificacion atención: {{ calificacionAtencion }}</p>
+    <button (click)="cerrarComentarioModal()" class="btn btn-secondary">Cerrar</button>
+  </div>
+</div>
+
+<app-spinner *ngIf="spinner"></app-spinner>

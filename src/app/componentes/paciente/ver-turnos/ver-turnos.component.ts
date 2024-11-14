@@ -5,11 +5,12 @@ import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { NavPacienteComponent } from '../../navbar/nav-paciente/nav-paciente.component';
 import { CommonModule } from '@angular/common';
 import { FiltroTurnosPipe } from '../../../pipelines/filtro-turnos.pipe';
+import { SpinnerComponent } from "../../../spinner/spinner.component";
 
 @Component({
   selector: 'app-ver-turnos',
   standalone: true,
-  imports: [NavPacienteComponent, CommonModule, FiltroTurnosPipe, FormsModule],
+  imports: [NavPacienteComponent, CommonModule, FiltroTurnosPipe, FormsModule, SpinnerComponent],
   templateUrl: './ver-turnos.component.html',
   styleUrl: './ver-turnos.component.scss'
 })
@@ -36,6 +37,14 @@ export class VerTurnosComponent {
   showComentarioModal = false;
   comentariosEspecialista: string | null = null;
   motivoCancelacion: string | null = null;
+  calificacionAtencion : string | null = null;
+
+  //Modal3
+  showCalificarModal: boolean = false;
+  calificacionComentario: string = '';
+
+  //spinner
+  spinner:boolean = false;
 
   constructor(
     private firestore: Firestore,
@@ -49,6 +58,7 @@ export class VerTurnosComponent {
   }
 
   async ngOnInit() {
+
     this.pacienteId = this.auth.currentUser ? this.auth.currentUser.email : null;
 
     if (this.pacienteId) {
@@ -60,6 +70,7 @@ export class VerTurnosComponent {
   }
 
   async cargarTurnos() {
+    this.spinner = true;
     const q = query(
       collection(this.firestore, 'Turnos'),
       where('pacienteId', '==', this.pacienteId)
@@ -75,6 +86,7 @@ export class VerTurnosComponent {
     });
 
     this.turnosFiltrados = [...this.turnos]; // Iniciar con todos los turnos
+    this.spinner = false;
   }
 
   aplicarFiltros() {
@@ -87,19 +99,6 @@ export class VerTurnosComponent {
     });
   }
 
-  async cancelarTurno(turnoId: string) {
-    const motivo = prompt('Ingrese el motivo de la cancelación del turno:');
-    if (motivo) {
-      const turnoDocRef = doc(this.firestore, 'Turnos', turnoId);
-      await updateDoc(turnoDocRef, {
-        estado: 'cancelado',
-        motivoCancelacion: motivo
-      });
-      alert('Turno cancelado exitosamente.');
-      await this.cargarTurnos();
-      this.aplicarFiltros();
-    }
-  }
 
   async completarEncuesta(turnoId: string) {
     const comentarios = prompt('Ingrese sus comentarios para la encuesta:');
@@ -115,14 +114,26 @@ export class VerTurnosComponent {
   }
 
   async calificarAtencion(turnoId: string) {
-    const calificacion = prompt('Ingrese su calificación y comentarios sobre la atención:');
-    if (calificacion) {
-      const turnoDocRef = doc(this.firestore, 'Turnos', turnoId);
+    this.turnoId = turnoId; // Guardar el ID del turno actual
+    this.calificacionComentario = ''; // Limpiar el comentario previo
+    this.showCalificarModal = true; // Mostrar el modal
+  }
+  
+  cerrarCalificarModal() {
+    this.showCalificarModal = false;
+  }
+  
+  async confirmarCalificacion() {
+    
+    if (this.calificacionComentario && this.turnoId) {
+      const turnoDocRef = doc(this.firestore, 'Turnos', this.turnoId);
+      this.spinner = true;
       await updateDoc(turnoDocRef, {
-        calificacion: calificacion
+        calificacion: this.calificacionComentario
       });
-      alert('Calificación guardada exitosamente.');
-      await this.cargarTurnos();
+      this.spinner = false
+      this.cerrarCalificarModal(); // Cerrar el modal
+      await this.cargarTurnos(); // Recargar los turnos
       this.aplicarFiltros();
     }
   }
@@ -183,9 +194,10 @@ export class VerTurnosComponent {
     await this.cargarTurnos(); // Actualiza la lista de turnos
   }
 
-  verComentario(comentariosEspecialista: string | null, motivoCancelacion: string | null): void {
+  verComentario(comentariosEspecialista: string | null, motivoCancelacion: string | null, calificacion: string | null): void {
     this.comentariosEspecialista = comentariosEspecialista && comentariosEspecialista.trim() ? comentariosEspecialista : null;
     this.motivoCancelacion = motivoCancelacion && motivoCancelacion.trim() ? motivoCancelacion : null;
+    this.calificacionAtencion  = calificacion && calificacion.trim() ? calificacion : null;
     this.showComentarioModal = true;
   }
 

@@ -157,7 +157,7 @@ export class FirebaseServices {
     };
   }
 
-  //===================REGISTRAR ESPECIALISTA===================
+  //===================REGISTRAR ADMIN===================
   async subirAdmin(form: FormGroup) {
     const col = collection(this.firestore, "usuarios");
   
@@ -286,6 +286,8 @@ export class FirebaseServices {
     return false;
   }
 
+
+
   async traerUsuario(correo: string) {
     const usuariosCollection = collection(this.firestore, 'usuarios'); // Cambia 'usuarios' por el nombre de tu colección
     const q = query(usuariosCollection, where('correo', '==', correo));
@@ -334,6 +336,33 @@ export class FirebaseServices {
 
     try {
       const querySnapshot = await getDocs(usuariosCollection); // Obtener todos los documentos de la colección
+
+      if (querySnapshot.empty) {
+        console.log("No se encontraron usuarios.");
+        return []; // Si no hay usuarios, retornar un arreglo vacío
+      }
+
+      // Si hay documentos, mapearlos a un arreglo de usuarios
+      const usuarios = querySnapshot.docs.map(doc => {
+        return { id: doc.id, ...doc.data() }; // Devolvemos el id del documento y sus datos
+      });
+
+      return usuarios; // Devolver el arreglo de usuarios
+
+    } catch (error) {
+      console.error("Error al obtener los usuarios:", error);
+      throw new Error("Error al obtener los usuarios desde Firestore.");
+    }
+  }
+
+  async traerUsuariosPorTipo(tipo:string) {
+    const usuariosCollection = collection(this.firestore, 'usuarios'); // Acceder a la colección 'usuarios'
+
+    const usuariosQuery = query(usuariosCollection, where('tipoUsuario', '==', tipo));
+
+
+    try {
+      const querySnapshot = await getDocs(usuariosQuery); // Obtener todos los documentos de la colección
 
       if (querySnapshot.empty) {
         console.log("No se encontraron usuarios.");

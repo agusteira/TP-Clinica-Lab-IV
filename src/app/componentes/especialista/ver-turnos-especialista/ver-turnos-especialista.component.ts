@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FiltroDelEspecialistaPipe } from '../../../pipelines/filtro-del-especialista.pipe';
 import { NavEspecialistaComponent } from '../../navbar/nav-especialista/nav-especialista.component';
+import { SpinnerComponent } from "../../../spinner/spinner.component";
 
 @Component({
   selector: 'app-ver-turnos-especialista',
   standalone: true,
-  imports: [NavEspecialistaComponent, CommonModule, FormsModule, FiltroDelEspecialistaPipe],
+  imports: [NavEspecialistaComponent, CommonModule, FormsModule, FiltroDelEspecialistaPipe, SpinnerComponent],
   templateUrl: './ver-turnos-especialista.component.html',
   styleUrls: ['./ver-turnos-especialista.component.scss']
 })
@@ -26,6 +27,13 @@ export class VerTurnosEspecialistaComponent implements OnInit {
   accion: string = '';
   turnoId: string | null = null;
 
+  //Modal2
+  showComentarioModal = false;
+  comentariosEspecialista: string | null = null;
+  motivoCancelacion: string | null = null;
+  calificacionAtencion : string | null = null;
+
+  spinner:boolean = false;
   constructor(
     private firestore: Firestore,
     private auth: Auth
@@ -34,7 +42,9 @@ export class VerTurnosEspecialistaComponent implements OnInit {
   async ngOnInit() {
     this.especialistaId = this.auth.currentUser ? this.auth.currentUser.email : null;
     if (this.especialistaId) {
+      this.spinner = true;
       await this.cargarTurnos();
+      this.spinner = false;
     }
   }
 
@@ -50,6 +60,18 @@ export class VerTurnosEspecialistaComponent implements OnInit {
       turno['id'] = doc.id;
       return turno;
     });
+  }
+  verComentario(comentariosEspecialista: string | null, motivoCancelacion: string | null, calificacion: string | null): void {
+    this.comentariosEspecialista = comentariosEspecialista && comentariosEspecialista.trim() ? comentariosEspecialista : null;
+    this.motivoCancelacion = motivoCancelacion && motivoCancelacion.trim() ? motivoCancelacion : null;
+    this.calificacionAtencion  = calificacion && calificacion.trim() ? calificacion : null;
+    this.showComentarioModal = true;
+  }
+
+  cerrarComentarioModal(): void {
+    this.showComentarioModal = false;
+    this.comentariosEspecialista = null;
+    this.motivoCancelacion = null;
   }
 
   abrirModal(accion: string, turnoId: string) {
@@ -85,6 +107,7 @@ export class VerTurnosEspecialistaComponent implements OnInit {
   }
 
   async confirmarAccion() {
+    this.spinner = true;
     if (!this.turnoId) return;
     const turnoDocRef = doc(this.firestore, 'Turnos', this.turnoId);
 
@@ -105,5 +128,6 @@ export class VerTurnosEspecialistaComponent implements OnInit {
 
     this.cerrarModal();
     await this.cargarTurnos(); // Actualiza la lista de turnos
+    this.spinner = false;
   }
 }

@@ -29,12 +29,12 @@
         <td>{{ turno.estado }}</td>
         <td>
           <button *ngIf="turno.estado != 'cancelado' && turno.estado != 'realizado'" class="btn btn-danger" (click)="abrirModal('cancelar', turno.id)">Cancelar</button>
-          <button class="btn btn-warning" style="color:black" *ngIf="turno.estado == 'realizado' && (turno?.resena?.length > 0)" (click)="completarEncuesta(turno.id)">Completar Encuesta</button>
-          <button class="btn btn-warning" style="color:black" *ngIf="turno.estado === 'realizado'" (click)="calificarAtencion(turno.id)">Calificar atención</button>
+          <button class="btn btn-warning" style="color:black" *ngIf="turno.estado == 'realizado' && (turno?.comentariosEspecialista?.length > 0)" (click)="completarEncuesta(turno.id)">Completar Encuesta</button>
+          <button class="btn btn-warning" style="color:black" *ngIf="turno.estado === 'realizado' && !(turno.calificacion?.length > 0)" (click)="calificarAtencion(turno.id)">Calificar atención</button>
           <button 
               class="btn btn-info" 
-              *ngIf="(turno?.comentariosEspecialista?.length > 0) || (turno?.motivoCancelacion?.length > 0)" 
-              (click)="verComentario(turno.comentariosEspecialista, turno.motivoCancelacion)">
+              *ngIf="(turno?.comentariosEspecialista?.length > 0) || (turno?.motivoCancelacion?.length > 0) || (turno.calificacion?.length > 0)" 
+              (click)="verComentario(turno.comentariosEspecialista, turno.motivoCancelacion, turno.calificacion)">
               Ver comentarios
           </button>
         </td>
@@ -60,6 +60,20 @@
     <h3>Comentarios del Turno</h3>
     <p *ngIf="comentariosEspecialista">Comentario del Especialista: {{ comentariosEspecialista }}</p>
     <p *ngIf="motivoCancelacion">Motivo de Cancelación: {{ motivoCancelacion }}</p>
+    <p *ngIf="calificacionAtencion">Calificacion atención: {{ calificacionAtencion }}</p>
     <button (click)="cerrarComentarioModal()" class="btn btn-secondary">Cerrar</button>
   </div>
 </div>
+
+<!-- Modal para Calificar Atención -->
+<div class="modal" *ngIf="showCalificarModal">
+  <div class="modal-content">
+    <h3>Calificar Atención</h3>
+    <textarea [(ngModel)]="calificacionComentario" rows="4" placeholder="Ingrese su calificación y comentarios"></textarea>
+    <button (click)="confirmarCalificacion()" class="btn btn-primary">Confirmar</button>
+    <button (click)="cerrarCalificarModal()" class="btn btn-secondary">Cerrar</button>
+  </div>
+</div>
+
+
+<app-spinner *ngIf="spinner"></app-spinner>

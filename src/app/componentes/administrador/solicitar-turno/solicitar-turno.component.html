@@ -1,9 +1,25 @@
-<app-nav-paciente></app-nav-paciente>
+<app-nav-admin></app-nav-admin>
 <div class="solicitar-turno-card">
   <h2>Solicitar Turno</h2>
 
   <form (ngSubmit)="solicitarTurno()">
     <div>
+        <label>Paciente:</label>
+        <div class="options-container">
+          <div class="options-container">
+            <div 
+              *ngFor="let paciente of pacientes" 
+              (click)="selectedPacienteId = paciente.correo;"
+              [class.selected]="paciente.correo === selectedPacienteId"
+              class="option-item card-especialista">
+              {{paciente.nombre}} {{paciente.apellido}}
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div *ngIf="selectedPacienteId">
       <label>Especialista:</label>
       <div class="options-container">
         <div class="options-container">
@@ -62,7 +78,7 @@
     </div>
 
     <div>
-      <button type="submit" [disabled]="!selectedHora">Solicitar Turno</button>
+        <button type="button" [disabled]="!selectedHora" (click)="solicitarTurno()">Solicitar Turno</button>
     </div>
   </form>
 </div>

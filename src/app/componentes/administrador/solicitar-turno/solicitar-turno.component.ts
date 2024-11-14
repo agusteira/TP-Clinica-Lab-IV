@@ -1,23 +1,24 @@
+import { Component, inject } from '@angular/core';
+import { SpinnerComponent } from "../../../spinner/spinner.component";
+import { NavPacienteComponent } from "../../navbar/nav-paciente/nav-paciente.component";
+import { TurnosService } from '../../../services/turnos.service';
+import { FirebaseServices } from '../../../services/firebase.services';
+
+import { FormatoHoraPipe } from "../../../pipelines/formato-hora.pipe";
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { NavPacienteComponent } from "../navbar/nav-paciente/nav-paciente.component";
-import { Firestore, collection, query, where, getDocs, CollectionReference, DocumentData, addDoc } from '@angular/fire/firestore';
-import { FirebaseServices } from '../../services/firebase.services';
-import { Auth, getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { SpinnerComponent } from "../../spinner/spinner.component";
-import { TurnosService } from '../../services/turnos.service';
-import { FormatoHoraPipe } from '../../pipelines/formato-hora.pipe';
+import { Auth } from '@angular/fire/auth';
+import { NavAdminComponent } from "../../navbar/nav-admin/nav-admin.component";
 
 @Component({
   selector: 'app-solicitar-turno',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavPacienteComponent, SpinnerComponent, FormatoHoraPipe],
+  imports: [SpinnerComponent, NavPacienteComponent, FormatoHoraPipe, CommonModule, NavAdminComponent],
   templateUrl: './solicitar-turno.component.html',
-  styleUrls: ['./solicitar-turno.component.scss']
+  styleUrl: './solicitar-turno.component.scss'
 })
-export class SolicitarTurnoComponent implements OnInit{
+export class SolicitarTurnoAdminComponent {
   especialidades: string[] = [];
+  pacientes: any[] = [];
   especialistas: { nombre: string, id: string, foto1: string}[] = [];
   turnosDisponibles: string[] = [];
   fechasDisponibles: string[] = [];
@@ -26,9 +27,10 @@ export class SolicitarTurnoComponent implements OnInit{
   selectedEspecialista: string = '';
   selectedFecha: string = '';
   selectedHora: string = '';
+  selectedPacienteId: string = "";
 
   nombreEspecialista: string = '';
-  pacienteId!: string;
+  adminId!: string;
   showErrorModal: boolean = false;
   spinner: boolean = false;
 
@@ -37,7 +39,6 @@ export class SolicitarTurnoComponent implements OnInit{
 
   imagenesEspecialidades: { especialidad: string, imagen: string }[] = [];
   imagenPorDefecto = 'https://firebasestorage.googleapis.com/v0/b/clinica-1fd9a.firebasestorage.app/o/especialidades%2F8cf83fe9-930d-45c5-b5b8-a4107ae6b76c.webp?alt=media&token=1cb6b38f-a8ef-4e89-99c3-ae57a2227cfe'; // Ruta de la imagen por defecto
-
 
   constructor(
     private turnosService: TurnosService,
@@ -49,12 +50,10 @@ export class SolicitarTurnoComponent implements OnInit{
     this.spinner = true;
     this.especialistas = await this.turnosService.cargarTodosLosEspecialistas(); // Cargar todos los especialistas inicialmente
     this.imagenesEspecialidades = await this.turnosService.cargarImagenesEspecialidades();
+    this.cargarPacientes()
       //console.log(this.imagenesEspecialidades)
     this.spinner = false;
     
-    if (this.auth.currentUser) {
-      this.pacienteId = this.auth.currentUser.email!;
-    }
   }
 
   async onEspecialistaChange() {
@@ -77,15 +76,22 @@ export class SolicitarTurnoComponent implements OnInit{
     this.spinner = false;
   }
 
+  async cargarPacientes(){
+    this.spinner = true;
+    this.pacientes = await this.fbsvc.traerUsuariosPorTipo("paciente");
+    console.log(this.pacientes)
+    this.spinner = false;
+  }
+
   async solicitarTurno() {
-    if (this.selectedEspecialidad && this.selectedEspecialista && this.selectedFecha && this.selectedHora) {
+    if (this.selectedEspecialidad && this.selectedEspecialista && this.selectedFecha && this.selectedHora && this.selectedPacienteId) {
       try {
         this.spinner = true;
         const [horaInicio, horaFin] = this.selectedHora.split(" - ");
 
         const turnoData = {
           especialistaId: this.selectedEspecialista,
-          pacienteId: this.pacienteId,
+          pacienteId: this.selectedPacienteId,
           especialidad: this.selectedEspecialidad,
           fecha: this.selectedFecha,
           horaInicio: horaInicio,
@@ -95,10 +101,11 @@ export class SolicitarTurnoComponent implements OnInit{
           comentariosEspecialista: null,
           calificacion: null,
           nombreEspecialista: this.nombreEspecialista,
-          nombrePaciente: await this.fbsvc.traerNombreApellido(this.pacienteId)
+          nombrePaciente: await this.fbsvc.traerNombreApellido(this.selectedPacienteId)
         };
 
         await this.turnosService.solicitarTurno(turnoData);
+        console.log("turno solicitado")
         this.setModal("Turno registrado", `Turno solicitado para el ${this.selectedFecha} a las ${this.selectedHora} con ${this.nombreEspecialista} en la especialidad de ${this.selectedEspecialidad}.`);
 
         // Vaciar todos los campos después de solicitar el turno exitosamente
@@ -129,6 +136,7 @@ export class SolicitarTurnoComponent implements OnInit{
 
   closeModal() {
     this.showErrorModal = false;
+    window.location.reload(); // Recarga la página actual
   }
 
   private setModal(titulo: string, message: string) {
