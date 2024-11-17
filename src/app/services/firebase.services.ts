@@ -286,6 +286,48 @@ export class FirebaseServices {
     return false;
   }
 
+  async traerUsuarioSinCorreo(){
+    const usuariosCollection = collection(this.firestore, 'usuarios'); // Cambia 'usuarios' por el nombre de tu colección
+    const q = query(usuariosCollection, where('correo', '==', this.auth.currentUser?.email));
+
+    try {
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        console.log("No se encontró ningún usuario con ese correo.");
+        return null; // No se encontró usuario
+      }
+
+      // Si hay resultados, devolver el primer usuario encontrado
+      const usuarioDoc = querySnapshot.docs[0]; // Usualmente, un correo será único, así que tomamos el primero
+      const usuario = usuarioDoc.data();
+      return usuario;
+    } catch (error) {
+      console.error("Error al obtener el usuario:", error);
+      throw new Error("Error al obtener el usuario desde Firestore.");
+    }
+  }
+
+  async traerHorariosEspecialistas(): Promise<any[]> {
+    const usuariosCollection = collection(this.firestore, 'HorariosEspecialistas'); // Colección
+    const q = query(usuariosCollection, where('correo', '==', this.auth.currentUser?.email)); // Filtra por correo (puedes quitar el where si no necesitas filtro)
+  
+    try {
+      const querySnapshot = await getDocs(q); // Obtiene todos los documentos que cumplen con la condición
+  
+      if (querySnapshot.empty) {
+        console.log("No se encontraron documentos con ese correo.");
+        return []; // Devuelve un array vacío si no hay resultados
+      }
+  
+      // Mapeamos todos los documentos obtenidos a un array
+      const documentos = querySnapshot.docs.map(doc => doc.data());
+      return documentos; // Devuelve todos los documentos como un array
+    } catch (error) {
+      console.error("Error al obtener los documentos:", error);
+      throw new Error("Error al obtener los documentos desde Firestore.");
+    }
+  }
+  
 
 
   async traerUsuario(correo: string) {

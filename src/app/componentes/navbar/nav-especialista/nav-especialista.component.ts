@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class NavEspecialistaComponent {
   constructor(private router: Router) {}
-  redirigir(ruta:string) {
-    this.router.navigate([ruta]);
+  redirigir(ruta: string, parametros: any = null) {
+    this.router.navigate([ruta], { queryParams: parametros });
   }
 }

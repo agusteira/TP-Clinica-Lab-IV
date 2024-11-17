@@ -12,6 +12,7 @@ import { HomeEspecialistaComponent } from './componentes/especialista/home/home.
 import { VerTurnosEspecialistaComponent } from './componentes/especialista/ver-turnos-especialista/ver-turnos-especialista.component';
 import { TodosLosTurnosComponent } from './componentes/administrador/todos-los-turnos/todos-los-turnos.component';
 import { SolicitarTurnoAdminComponent } from './componentes/administrador/solicitar-turno/solicitar-turno.component';
+import { MiPerfilComponent } from './componentes/mi-perfil/mi-perfil.component';
 
 export const routes: Routes = [
     { path: 'landing', component: HomeComponent },
@@ -32,6 +33,9 @@ export const routes: Routes = [
             {
                 path:"solicitar-turno", component: SolicitarTurnoAdminComponent
             },
+            {
+                path:"mi-perfil", component: MiPerfilComponent
+            }
         ]
     },
     {
@@ -45,6 +49,9 @@ export const routes: Routes = [
             },
             {
                 path:"mis-turnos", component: VerTurnosComponent
+            },
+            {
+                path:"mi-perfil", component: MiPerfilComponent
             }
         ]
     },
@@ -56,6 +63,9 @@ export const routes: Routes = [
             },
             {
                 path:"mis-turnos", component: VerTurnosEspecialistaComponent
+            },
+            {
+                path:"mi-perfil", component: MiPerfilComponent
             }
         ]
     },

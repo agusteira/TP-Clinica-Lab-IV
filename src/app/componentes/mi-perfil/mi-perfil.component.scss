@@ -1,0 +1,140 @@
+/* Fondo general */
+body {
+    background: linear-gradient(to bottom, #f7f9fc, #e2e6f0);
+    color: #333;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Contenedor principal */
+  .contenedor {
+    margin: 50px auto;
+    padding: 20px;
+    max-width: 900px;
+  }
+  
+  /* Estilo de la Card */
+  .card2 {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    background: #ffffff;
+  }
+  
+  .card2-background {
+    background: #004179;
+    color: white;
+  }
+  
+  .card2-body {
+    padding: 20px 30px;
+  }
+  
+  .card2-title {
+    font-size: 1.5rem;
+    color: #ffc107;
+    margin-bottom: 15px;
+  }
+  
+  .info-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .info-list li {
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+  
+  /* Estilo de imágenes */
+  .card2-image img {
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 100%;
+  }
+  
+  .card2-image img.mt-3 {
+    margin-top: 15px;
+  }
+  
+  /* Disponibilidad Horaria */
+  .horario-item {
+    margin-bottom: 20px;
+  }
+  
+  .especialidad-title {
+    font-size: 1.3rem;
+    color: #ffc107;
+  }
+  
+  .turno-duracion {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  
+  .horario-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .horario-list li {
+    margin-bottom: 5px;
+    font-size: 1rem;
+  }
+  
+  /* Spinner */
+  app-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+
+  //========HORARIOS==============
+  .especialidades-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Columnas adaptativas */
+    gap: 20px; /* Espaciado entre columnas */
+    margin-top: 20px;
+  }
+  
+  .especialidad-col {
+    background-color: #393939;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .especialidad-col:hover {
+    transform: translateY(-5px); /* Efecto hover */
+  }
+  
+  .especialidad-title {
+    font-size: 1.3rem;
+    color: #ffc107;
+    margin-bottom: 10px;
+  }
+  
+  .turno-duracion {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+  
+  .horario-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .horario-list li {
+    margin-bottom: 10px;
+  }
+  
+  .btn-sm {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    margin-right: 5px;
+  }
+  

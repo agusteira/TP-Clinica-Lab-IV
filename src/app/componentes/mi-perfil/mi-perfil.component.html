@@ -1,0 +1,113 @@
+<app-nav-admin *ngIf="params.tipo == 'admin'"></app-nav-admin>
+<app-nav-paciente *ngIf="params.tipo == 'paciente'"></app-nav-paciente>
+<app-nav-especialista *ngIf="params.tipo == 'especialista'"></app-nav-especialista>
+
+<div *ngIf="usuario != null" class="contenedor">
+  <div class="card2 card2-background">
+    <div class="row no-gutters">
+      <!-- Columna 1: Información del Usuario -->
+      <div class="col-md-8">
+        <div class="card2-body">
+          <h2 class="card2-title mb-3">{{ usuario.nombre }} {{ usuario.apellido }}</h2>
+          <ul class="info-list">
+            <li><strong>Edad:</strong> {{ usuario.edad }}</li>
+            <li><strong>DNI:</strong> {{ usuario.DNI }}</li>
+            <li><strong>Correo:</strong> {{ usuario.correo }}</li>
+            <li><strong>Tipo de Usuario:</strong> {{ usuario.tipoUsuario }}</li>
+          </ul>
+          <div *ngIf="usuario.tipoUsuario === 'paciente'">
+            <p><strong>Obra Social:</strong> {{ usuario.obraSocial }}</p>
+          </div>
+          <div *ngIf="usuario.tipoUsuario === 'especialista'">
+            <p><strong>Especialidades:</strong> {{ usuario.especialidades | especialidad }}</p>
+            <p><strong>Habilitado:</strong> {{ usuario.habilitado }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna 2: Imágenes -->
+      <div class="col-md-4 d-flex flex-column align-items-center">
+        <div class="card2-image">
+          <img *ngIf="usuario.foto1" [src]="usuario.foto1" alt="Foto de Usuario" class="img-fluid">
+          <img *ngIf="usuario.foto2" [src]="usuario.foto2" alt="Foto Adicional" class="img-fluid mt-3">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="params.tipo == 'especialista'">
+    <div class="card2 mt-4 card2-background" *ngIf="horarios?.length > 0">
+      <div class="card2-body">
+        <h3 class="card2-title mb-3">Disponibilidad Horaria</h3>
+        <div class="especialidades-container">
+          <div *ngFor="let horario of horarios; let i = index" class="especialidad-col">
+            <h5 class="especialidad-title">
+              <strong>Especialidad:</strong> {{ horario.especialidad }}
+            </h5>
+            <p class="turno-duracion">
+              <strong>Duración del turno:</strong> 
+              <span *ngIf="!horario.editando">{{ horario.duracionTurno }} minutos</span>
+              <input *ngIf="horario.editando" [(ngModel)]="horario.duracionTurno" type="number" min="10" class="form-control-inline">
+            </p>
+  
+            <!-- Lista editable de disponibilidad -->
+            <ul class="horario-list">
+              <li *ngFor="let dia of horario.disponibilidad; let j = index">
+                <strong>{{ dia.dia | titlecase }}:</strong>
+                <div [formGroup]="getDiaGroup(i, j)" class="form-group">
+                  <div *ngIf="!horario.editando">
+                    <span *ngFor="let intervalo of dia.horarios; let k = index">
+                      {{ intervalo.inicio }} - {{ intervalo.fin }}<span *ngIf="k < dia.horarios.length - 1">, </span>
+                    </span>
+                  </div>
+                  <div *ngIf="horario.editando">
+                    <div class="input-group mb-2">
+                      <input 
+                        formControlName="inicio"
+                        type="time" 
+                        class="form-control-inline" 
+                        [min]="getMinTime(dia.dia)" 
+                        [max]="getMaxTime(dia.dia)"
+                        (change)="validarHorario(i, j)">
+                      <span class="mx-2">a</span>
+                      <input 
+                        formControlName="fin"
+                        type="time" 
+                        class="form-control-inline" 
+                        [min]="getMinTime(dia.dia)" 
+                        [max]="getMaxTime(dia.dia)"
+                        (change)="validarHorario(i, j)">
+                    </div>
+                    <div *ngIf="!esHorarioValido(i, j)" class="text-danger">
+                      Horario inválido: debe estar entre {{ getMinTime(dia.dia) }} y {{ getMaxTime(dia.dia) }}
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+  
+            <!-- Botones de acción -->
+            <div class="mt-3">
+              <button *ngIf="!horario.editando" class="btn btn-primary btn-sm" (click)="activarEdicion(horario)">Editar</button>
+              <button *ngIf="horario.editando" 
+                      class="btn btn-success btn-sm" 
+                      (click)="guardarEdicion(horario)" 
+                      [disabled]="!isFormGroupValid(i)">
+                Guardar
+              </button>
+              <button *ngIf="horario.editando" class="btn btn-danger btn-sm" (click)="cancelarEdicion(horario, i)">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+</div>
+
+<!-- Disponibilidad Horaria -->
+
+
+<app-spinner *ngIf="spinner"></app-spinner>
