@@ -97,6 +97,7 @@ button.btn-success:hover {
   margin-bottom: 20px;
   display: flex;
   gap: 15px;
+  align-items: center;
 }
 
 .filtros label {
@@ -108,7 +109,8 @@ button.btn-success:hover {
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 8px;
-  width: 200px;
+  height: 70px;
+  //width: 200px;
 }
 
 .tabla{

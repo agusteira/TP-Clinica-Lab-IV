@@ -63,4 +63,7 @@ export class VerUsuariosComponent implements OnChanges, OnInit {
     // Actualizar la lista para reflejar el cambio
     this.cargarUsuarios();
   }
+  objectKeys(obj: any): string[] {
+    return Object.keys(obj || {});
+  }
 }

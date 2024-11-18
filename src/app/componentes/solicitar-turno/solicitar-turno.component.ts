@@ -109,7 +109,7 @@ export class SolicitarTurnoComponent implements OnInit{
         this.nombreEspecialista = '';
         this.turnosDisponibles = [];
         this.fechasDisponibles = [];
-        this.especialistas = [];
+        //this.especialistas = [];
       } catch (error) {
         console.log(error)
         this.setModal("Error", "Hubo un error al solicitar el turno");

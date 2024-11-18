@@ -116,7 +116,6 @@ export class SolicitarTurnoAdminComponent {
         this.nombreEspecialista = '';
         this.turnosDisponibles = [];
         this.fechasDisponibles = [];
-        this.especialistas = [];
       } catch (error) {
         console.log(error)
         this.setModal("Error", "Hubo un error al solicitar el turno");

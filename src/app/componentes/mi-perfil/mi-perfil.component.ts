@@ -179,5 +179,7 @@ export class MiPerfilComponent {
     return horarioArray.valid; // Verifica si el FormArray completo es válido
   }
   
-
+  objectKeys(obj: any): string[] {
+    return Object.keys(obj || {});
+  }
 }

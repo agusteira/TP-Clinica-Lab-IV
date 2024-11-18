@@ -13,6 +13,7 @@ import { VerTurnosEspecialistaComponent } from './componentes/especialista/ver-t
 import { TodosLosTurnosComponent } from './componentes/administrador/todos-los-turnos/todos-los-turnos.component';
 import { SolicitarTurnoAdminComponent } from './componentes/administrador/solicitar-turno/solicitar-turno.component';
 import { MiPerfilComponent } from './componentes/mi-perfil/mi-perfil.component';
+import { PacientesComponent } from './componentes/especialista/pacientes/pacientes.component';
 
 export const routes: Routes = [
     { path: 'landing', component: HomeComponent },
@@ -66,6 +67,9 @@ export const routes: Routes = [
             },
             {
                 path:"mi-perfil", component: MiPerfilComponent
+            },
+            {
+                path:"pacientes", component: PacientesComponent
             }
         ]
     },

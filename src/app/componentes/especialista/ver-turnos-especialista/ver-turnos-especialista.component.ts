@@ -98,13 +98,37 @@ export class VerTurnosEspecialistaComponent implements OnInit {
         this.turnos.push(turno);
       });
   
-      console.log('Turnos actualizados:', this.turnos);
+      // Ordenar por fecha y luego por horaInicio
+      this.turnos.sort((a, b) => {
+        // Formato esperado: "DD/MM/YYYY" para fecha y "HH:mm" para horaInicio
+        const [diaA, mesA, anioA] = a.fecha.split('/').map(Number);
+        const [diaB, mesB, anioB] = b.fecha.split('/').map(Number);
+  
+        // Crear objetos Date solo con fecha
+        const fechaA = new Date(anioA, mesA - 1, diaA);
+        const fechaB = new Date(anioB, mesB - 1, diaB);
+  
+        if (fechaA.getTime() !== fechaB.getTime()) {
+          // Ordenar por fecha
+          return fechaA.getTime() - fechaB.getTime();
+        } else {
+          // Ordenar por horaInicio si las fechas son iguales
+          const [horaA, minutoA] = a.horaInicio.split(':').map(Number);
+          const [horaB, minutoB] = b.horaInicio.split(':').map(Number);
+  
+          // Comparar horas y minutos
+          return horaA !== horaB ? horaA - horaB : minutoA - minutoB;
+        }
+      });
+  
+      console.log('Turnos actualizados y ordenados:', this.turnos);
       this.cdr.detectChanges(); // Forzar detección de cambios en el DOM
     });
   
     // Retornamos la función para cancelar la suscripción si es necesario
     return unsubscribe;
   }
+  
   
   verComentario(comentariosEspecialista: string | null, motivoCancelacion: string | null, calificacion: string | null): void {
     this.comentariosEspecialista = comentariosEspecialista && comentariosEspecialista.trim() ? comentariosEspecialista : null;
@@ -205,12 +229,19 @@ export class VerTurnosEspecialistaComponent implements OnInit {
     this.datosVariables.splice(index, 1);
   }
 
-  enviarDatos(turno:any) {
+  enviarDatos(turno: any) {
+    // Transformar datosVariables en un objeto con claves dinámicas
+    const datosVariablesTransformados = this.datosVariables.reduce((obj, variable) => {
+      obj[variable.clave] = variable.valor; // Usa la clave como propiedad del objeto
+      return obj;
+    }, {} as Record<string, string>);
+  
     const datosCompletos = {
       datosFijos: this.datosFijos,
-      datosVariables: this.datosVariables,
+      datosVariables: datosVariablesTransformados, // Ahora es un objeto
     };
-    this.agregarHistoriaClinica(turno, datosCompletos)
+  
+    this.agregarHistoriaClinica(turno, datosCompletos);
     this.cerrarModalHistoriaClinica();
   }
 
@@ -227,15 +258,15 @@ export class VerTurnosEspecialistaComponent implements OnInit {
       
     }
     console.log(this.pacienteAbierto)
-    this.agregarDatosVaribles(turno, this.pacienteAbierto, datosCompletos.datosVariables)
+    this.agregarDatosVaribles(turno, this.pacienteAbierto, datosCompletos)
   }
 
-  async agregarDatosVaribles(turno:any, paciente: any, datosVariables:any){
+  async agregarDatosVaribles(turno:any, paciente: any, datosCompletos:any){
     if (!paciente.historiaClinica?.datosVariables) {
       paciente.historiaClinica.datosVariables = {}; 
     }
 
-    paciente.historiaClinica.datosVariables[turno.id] = datosVariables
+    paciente.historiaClinica.datosVariables[turno.id] = datosCompletos
     await this.fbsvc.agregarDatosVariables(turno.pacienteId, paciente.historiaClinica)
     .then(async() => {console.log('Proceso completado')
       this.verificarQueNoSeAgregoLaHistoriaClinica(turno)

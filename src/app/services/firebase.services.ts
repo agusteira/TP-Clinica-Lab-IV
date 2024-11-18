@@ -437,6 +437,46 @@ export class FirebaseServices {
     }
   }
 
+  async traerUsuariosAtendidosPorEspecialista(correo: string): Promise<string[]> {
+    const usuariosCollection = collection(this.firestore, 'Turnos'); // Acceder a la colección 'Turnos'
+  
+    const usuariosQuery = query(usuariosCollection, where('especialistaId', '==', correo), where('estado', '==', "realizado"));
+  
+    try {
+      const querySnapshot = await getDocs(usuariosQuery); // Obtener todos los documentos de la colección
+  
+      if (querySnapshot.empty) {
+        console.log("No se encontraron usuarios.");
+        return []; // Si no hay usuarios, retornar un arreglo vacío
+      }
+  
+      // Extraer únicamente el campo 'pacienteId' de cada documento y eliminar duplicados
+      const pacienteIds = Array.from(
+        new Set(
+          querySnapshot.docs
+            .map(doc => doc.data()?.['pacienteId']) // Extraer la propiedad 'pacienteId'
+            .filter(pacienteId => pacienteId !== undefined) // Filtrar valores undefined
+        )
+      );
+  
+      return pacienteIds; // Devolver el arreglo único de 'pacienteId'
+  
+    } catch (error) {
+      console.error("Error al obtener los usuarios:", error);
+      throw new Error("Error al obtener los usuarios desde Firestore.");
+    }
+  }
+  
+  
+
+  async traerUsuariosAtendidosPorEspecialistaSinCorreo() {
+    const email = this.auth.currentUser?.email;
+    if (!email) {
+      throw new Error('El correo del usuario actual es nulo o indefinido.');
+    }
+    return this.traerUsuariosAtendidosPorEspecialista(email);
+  }
+
   async traerTipoUsuario(correo:string){
     const usuario = await this.traerUsuario(correo)
     return usuario!['tipoUsuario']
