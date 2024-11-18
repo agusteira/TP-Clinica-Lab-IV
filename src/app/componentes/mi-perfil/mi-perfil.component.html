@@ -89,12 +89,13 @@
             <!-- Botones de acción -->
             <div class="mt-3">
               <button *ngIf="!horario.editando" class="btn btn-primary btn-sm" (click)="activarEdicion(horario)">Editar</button>
-              <button *ngIf="horario.editando" 
-                      class="btn btn-success btn-sm" 
-                      (click)="guardarEdicion(horario)" 
-                      [disabled]="!isFormGroupValid(i)">
+              <button 
+                *ngIf="horario.editando" 
+                class="btn btn-success btn-sm" 
+                (click)="guardarEdicion(horario, i)" 
+                [disabled]="!isFormGroupValid(i)">
                 Guardar
-              </button>
+                </button>
               <button *ngIf="horario.editando" class="btn btn-danger btn-sm" (click)="cancelarEdicion(horario, i)">Cancelar</button>
             </div>
           </div>

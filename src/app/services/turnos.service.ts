@@ -112,8 +112,9 @@ export class TurnosService {
           const fin = this.convertirAHorasMinutos(horario.fin);
 
           let actual = inicio;
+          //=====Cargo todos los horarios disponibles=====
           while (actual < fin) {
-            const siguiente = actual + 30;
+            const siguiente = actual + data['duracionTurno'];
             if (siguiente <= fin) {
               const horarioInicio = this.formatoHora(actual);
               if (!horariosReservados.includes(horarioInicio)) {

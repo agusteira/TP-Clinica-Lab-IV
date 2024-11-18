@@ -286,91 +286,7 @@ export class FirebaseServices {
     return false;
   }
 
-  async traerUsuarioSinCorreo(){
-    const usuariosCollection = collection(this.firestore, 'usuarios'); // Cambia 'usuarios' por el nombre de tu colección
-    const q = query(usuariosCollection, where('correo', '==', this.auth.currentUser?.email));
 
-    try {
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.empty) {
-        console.log("No se encontró ningún usuario con ese correo.");
-        return null; // No se encontró usuario
-      }
-
-      // Si hay resultados, devolver el primer usuario encontrado
-      const usuarioDoc = querySnapshot.docs[0]; // Usualmente, un correo será único, así que tomamos el primero
-      const usuario = usuarioDoc.data();
-      return usuario;
-    } catch (error) {
-      console.error("Error al obtener el usuario:", error);
-      throw new Error("Error al obtener el usuario desde Firestore.");
-    }
-  }
-
-  async traerHorariosEspecialistas(): Promise<any[]> {
-    const usuariosCollection = collection(this.firestore, 'HorariosEspecialistas'); // Colección
-    const q = query(usuariosCollection, where('correo', '==', this.auth.currentUser?.email)); // Filtra por correo (puedes quitar el where si no necesitas filtro)
-  
-    try {
-      const querySnapshot = await getDocs(q); // Obtiene todos los documentos que cumplen con la condición
-  
-      if (querySnapshot.empty) {
-        console.log("No se encontraron documentos con ese correo.");
-        return []; // Devuelve un array vacío si no hay resultados
-      }
-  
-      // Mapeamos todos los documentos obtenidos a un array
-      const documentos = querySnapshot.docs.map(doc => doc.data());
-      return documentos; // Devuelve todos los documentos como un array
-    } catch (error) {
-      console.error("Error al obtener los documentos:", error);
-      throw new Error("Error al obtener los documentos desde Firestore.");
-    }
-  }
-  
-
-
-  async traerUsuario(correo: string) {
-    const usuariosCollection = collection(this.firestore, 'usuarios'); // Cambia 'usuarios' por el nombre de tu colección
-    const q = query(usuariosCollection, where('correo', '==', correo));
-
-    try {
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.empty) {
-        console.log("No se encontró ningún usuario con ese correo.");
-        return null; // No se encontró usuario
-      }
-
-      // Si hay resultados, devolver el primer usuario encontrado
-      const usuarioDoc = querySnapshot.docs[0]; // Usualmente, un correo será único, así que tomamos el primero
-      const usuario = usuarioDoc.data();
-      return usuario;
-    } catch (error) {
-      console.error("Error al obtener el usuario:", error);
-      throw new Error("Error al obtener el usuario desde Firestore.");
-    }
-  }
-
-  async traerTipoUsuario(correo:string){
-    const usuario = await this.traerUsuario(correo)
-    return usuario!['tipoUsuario']
-  }
-
-  async traerNombreApellido(correo:string){
-    const usuario = await this.traerUsuario(correo)
-    const nombre = usuario!['nombre'] + " " + usuario!['apellido']
-    return nombre
-  }
-
-  async traerFlag(correo:string){
-    const usuario = await this.traerUsuario(correo)
-    return usuario!['flag']
-  }
-
-  async verificarHabilitacion(correo:string){
-    const usuario = await this.traerUsuario(correo)
-    return usuario!['habilitado']
-  }
   //========================TRAER USUARIOS=================================
 
   async traerUsuarios() {
@@ -455,6 +371,93 @@ export class FirebaseServices {
     }
   }
 
+  async traerUsuarioSinCorreo(){
+    const usuariosCollection = collection(this.firestore, 'usuarios'); // Cambia 'usuarios' por el nombre de tu colección
+    const q = query(usuariosCollection, where('correo', '==', this.auth.currentUser?.email));
+
+    try {
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        console.log("No se encontró ningún usuario con ese correo.");
+        return null; // No se encontró usuario
+      }
+
+      // Si hay resultados, devolver el primer usuario encontrado
+      const usuarioDoc = querySnapshot.docs[0]; // Usualmente, un correo será único, así que tomamos el primero
+      const usuario = usuarioDoc.data();
+      return usuario;
+    } catch (error) {
+      console.error("Error al obtener el usuario:", error);
+      throw new Error("Error al obtener el usuario desde Firestore.");
+    }
+  }
+
+  async traerHorariosEspecialistas(): Promise<any[]> {
+    const usuariosCollection = collection(this.firestore, 'HorariosEspecialistas'); // Colección
+    const q = query(usuariosCollection, where('correo', '==', this.auth.currentUser?.email)); // Filtra por correo (puedes quitar el where si no necesitas filtro)
+  
+    try {
+      const querySnapshot = await getDocs(q); // Obtiene todos los documentos que cumplen con la condición
+  
+      if (querySnapshot.empty) {
+        console.log("No se encontraron documentos con ese correo.");
+        return [];
+      }
+  
+      const documentos = querySnapshot.docs.map(doc => ({
+        id: doc.id,      
+        ...doc.data()    
+      }));
+    
+      return documentos;
+    } catch (error) {
+      console.error("Error al obtener los documentos:", error);
+      throw new Error("Error al obtener los documentos desde Firestore.");
+    }
+  }
+
+  async traerUsuario(correo: string) {
+    const usuariosCollection = collection(this.firestore, 'usuarios'); // Cambia 'usuarios' por el nombre de tu colección
+    const q = query(usuariosCollection, where('correo', '==', correo));
+
+    try {
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        console.log("No se encontró ningún usuario con ese correo.");
+        return null; // No se encontró usuario
+      }
+
+      // Si hay resultados, devolver el primer usuario encontrado
+      const usuarioDoc = querySnapshot.docs[0]; // Usualmente, un correo será único, así que tomamos el primero
+      const usuario = usuarioDoc.data();
+      return usuario;
+    } catch (error) {
+      console.error("Error al obtener el usuario:", error);
+      throw new Error("Error al obtener el usuario desde Firestore.");
+    }
+  }
+
+  async traerTipoUsuario(correo:string){
+    const usuario = await this.traerUsuario(correo)
+    return usuario!['tipoUsuario']
+  }
+
+  async traerNombreApellido(correo:string){
+    const usuario = await this.traerUsuario(correo)
+    const nombre = usuario!['nombre'] + " " + usuario!['apellido']
+    return nombre
+  }
+
+  async traerFlag(correo:string){
+    const usuario = await this.traerUsuario(correo)
+    return usuario!['flag']
+  }
+
+  async verificarHabilitacion(correo:string){
+    const usuario = await this.traerUsuario(correo)
+    return usuario!['habilitado']
+  }
+
   //========================ACTUALIZAR USUARIOS=================================
 
   async deshabilitarusuario(usuarioId: string) {
@@ -499,5 +502,84 @@ export class FirebaseServices {
     }
   }
 
+  async actualizarHorarioEspecialista(datos: any): Promise<void> {
+    try {
+      // Referencia al documento específico basado en el ID
+      const documentoRef = doc(this.firestore, 'HorariosEspecialistas', datos.id);
+      //console.log("Datos a guardar: ", datos)
+      // Actualiza el documento con los datos proporcionados
+      await updateDoc(documentoRef, datos);
+  
+      console.log(`Documento con ID ${datos.id} actualizado correctamente.`);
+    } catch (error) {
+      console.error(`Error al actualizar el documento con ID ${datos.id}:`, error);
+      throw new Error("Error al actualizar el documento en Firestore.");
+    }
+  }
 
+  async agregarDatosVariables(correo: string, historiaClinica: any) {
+    try {
+      // Paso 1: Referencia a la colección de pacientes
+      const pacientesCollection = collection(this.firestore, 'usuarios');
+
+      // Paso 2: Consulta al paciente por correo
+      const q = query(pacientesCollection, where('correo', '==', correo));
+      const pacientesSnapshot = await getDocs(q);
+
+      if (pacientesSnapshot.empty) {
+        throw new Error('No se encontró un paciente con el correo proporcionado.');
+      }
+
+      // Paso 3: Obtén el ID del documento del paciente
+      const pacienteDoc = pacientesSnapshot.docs[0];
+      const pacienteId = pacienteDoc.id;
+
+      // Paso 4: Referencia al documento del paciente
+      const pacienteRef = doc(this.firestore, `usuarios/${pacienteId}`);
+
+      // Paso 6: Actualizar o crear el campo `historiaClinica`
+      await updateDoc(pacienteRef, {
+        historiaClinica
+      });
+
+      console.log('Historia clínica actualizada correctamente.');
+    } catch (error) {
+      console.error('Error al agregar la historia clínica:', error);
+    }
+  }
+
+  async generarHistoria(correo: string, historiaClinica: any) {
+    try {
+      // Paso 1: Referencia a la colección de pacientes
+      const pacientesCollection = collection(this.firestore, 'usuarios');
+
+      // Paso 2: Consulta al paciente por correo
+      const q = query(pacientesCollection, where('correo', '==', correo));
+      const pacientesSnapshot = await getDocs(q);
+
+      if (pacientesSnapshot.empty) {
+        throw new Error('No se encontró un paciente con el correo proporcionado.');
+      }
+
+      // Paso 3: Obtén el ID del documento del paciente
+      const pacienteDoc = pacientesSnapshot.docs[0];
+      const pacienteId = pacienteDoc.id;
+
+      // Paso 4: Referencia al documento del paciente
+      const pacienteRef = doc(this.firestore, `usuarios/${pacienteId}`);
+
+      // Paso 6: Actualizar o crear el campo `historiaClinica`
+      await updateDoc(pacienteRef, {
+        historiaClinica: {
+          ...historiaClinica, // Sobrescribir o añadir nueva data
+        },
+      });
+
+      console.log('Historia clínica actualizada correctamente.');
+      return historiaClinica
+    } catch (error) {
+      console.error('Error al agregar la historia clínica:', error);
+    }
+  }
+  
 }

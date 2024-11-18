@@ -71,10 +71,9 @@ export class MiPerfilComponent {
       }
       console.log(this.horarios)
     }finally{
-
-      this.spinner = false
+      
+    this.spinner = false
     }
-
   }
   
 
@@ -82,10 +81,27 @@ export class MiPerfilComponent {
     horario.editando = true;
   }
 
-  guardarEdicion(horario: any) {
+  guardarEdicion(horario: Horario, index: number): void {
+    this.spinner = true
+    const horarioFormArray = this.getHorarioArray(index); // Obtén el FormArray del horario
+    const valoresFormulario = horarioFormArray.value; // Obtén los valores del formulario
+  
+    // Actualiza los valores en el array `this.horarios`
+    horario.disponibilidad = horario.disponibilidad.map((dia, diaIndex) => ({
+      ...dia,
+      horarios: [
+        {
+          inicio: valoresFormulario[diaIndex].inicio,
+          fin: valoresFormulario[diaIndex].fin,
+        },
+      ],
+    }));
+  
     horario.editando = false;
-    console.log('Horarios guardados:', this.horarios);
-    // Aquí puedes llamar a un servicio para guardar los datos en Firebase
+    //console.log('Horarios guardados:',horario);
+    this.fbsvc.actualizarHorarioEspecialista(horario)
+    this.spinner = false
+    
   }
 
   cancelarEdicion(horario: any, index: number) {
