@@ -23,6 +23,15 @@ export class LoginComponent {
   errorMessage: string = "";
   spinner: boolean = false;
   tituloModal:string="";
+
+  usuarios = [
+    { correo: 'cetaho4087@cironex.com', clave: '1234567', rol: 'Paciente', imagen: 'https://cdn-icons-png.flaticon.com/512/387/387585.png' },
+    { correo: 'jefeyot578@anypng.com', clave: '1234567', rol: 'Paciente', imagen: 'https://cdn-icons-png.flaticon.com/512/387/387585.png' },
+    { correo: 'lakihat686@cironex.com', clave: '1234567', rol: 'Paciente', imagen: 'https://cdn-icons-png.flaticon.com/512/387/387585.png' },
+    { correo: 'rifixic382@gianes.com', clave: '1234567', rol: 'Especialista', imagen: 'https://static.vecteezy.com/system/resources/previews/018/914/708/non_2x/doctor-woman-flat-icon-png.png' },
+    { correo: 'torivo1450@gianes.com', clave: '1234567', rol: 'Especialista', imagen: 'https://static.vecteezy.com/system/resources/previews/018/914/708/non_2x/doctor-woman-flat-icon-png.png' },
+    { correo: 'admin@admin.com', clave: '123456', rol: 'Admin', imagen: 'https://cdn-icons-png.flaticon.com/512/2206/2206368.png' }
+  ];
   
 
   constructor(private router: Router, private auth: Auth, private fbsvc: FirebaseServices) { // Inyecta Router
@@ -30,7 +39,7 @@ export class LoginComponent {
   }
 
   async IniciarSesion(correo: string, clave: string) {
-    if (!correo || !clave || clave.length <= 6) {
+    if (!correo || !clave || clave.length < 6) {
       this.setModal("ERROR", "Error: No se pudo iniciar sesión. Verifica tus credenciales.");
       return;
     }
@@ -57,8 +66,7 @@ export class LoginComponent {
 
       switch(tipoUsuario){
         case"paciente":
-          //TO DO: REDIRIGIR A SU HOME
-          //this.router.navigate(['/home']);
+          this.router.navigate(['paciente/home']);
           break
         case"admin":
           this.redirigir("admin/home")
@@ -67,8 +75,7 @@ export class LoginComponent {
           const habilitacionEspecialista = await this.fbsvc.verificarHabilitacion(correo)
           switch(habilitacionEspecialista){
             case"aprobado":
-              //TO DO: REDIRIGIR A SU HOME
-              //this.router.navigate(['/home']);
+              this.router.navigate(['/especialista/home']);
               break
             case"pendiente":
               this.setModal("PENDIENTE", "Su usuario todavia esta pendiente de aprobacion")

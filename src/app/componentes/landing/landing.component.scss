@@ -1,0 +1,66 @@
+/* Fondo y estilo del navbar */
+.fondo {
+    background: #012442 !important;
+  }
+  
+  .center {
+    margin: auto;
+    color: white;
+  }
+  
+  /* Estilo para los enlaces del navbar */
+  .nav-link {
+    color: rgb(162, 162, 162) !important; 
+  }
+  
+  .nav-link:hover {
+    color: #f8f9fa; /* Color de texto al pasar el ratón (opcional) */
+    cursor: pointer; /* Asegúrate de que el cursor sea puntero también en hover */
+  }
+  
+  /* Estilos para la tarjeta de la landing page */
+  .card-landing {
+    background-color: #012442;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-title {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  .card-text {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  /* Estilo para la imagen dentro de la tarjeta */
+  .img-fluid {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
+  .imagenHospital{
+    display: flex;
+    margin:auto;
+    object-fit: cover;
+    height: 30%;
+    width: 30%;
+  }
+  
+  .card-body {
+    padding: 30px;
+  }
+  
+  /* Botón de la tarjeta */
+  .btn-outline-primary {
+    border-color: #56baed;
+    color: #56baed;
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: #56baed;
+    color: white;
+  }
+  

@@ -358,3 +358,44 @@ select:hover {
   font-size: 13px;
   font-family: "Poppins", sans-serif;
 }
+/* Estilo para los botones de acceso rápido */
+.auto-fill-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  top: 1%;
+  right: 20px;
+  
+}
+
+.auto-fill-buttons button {
+  width: 80px; /* Tamaño de los botones cuadrados */
+  height: 80px; /* Tamaño de los botones cuadrados */
+  background-color: #000000;  /* Fondo inicial */
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px; /* Espaciado entre los botones */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: background-color 0.3s ease; /* Transición suave */
+  margin:10px;
+  border-radius: 10px;
+}
+
+.auto-fill-buttons button:hover {
+  background-color: #004080; /* Color de fondo al hacer hover */
+}
+
+/* Clase que se aplica cuando el botón está seleccionado */
+.auto-fill-buttons button.selected {
+  background-color: #004080; /* Mismo fondo que el hover */
+}
+
+.profile-img {
+  width: 60px; /* Tamaño de la imagen */
+  height: 60px; /* Tamaño de la imagen */
+  object-fit: cover; /* Asegura que la imagen cubra el círculo */
+}

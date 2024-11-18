@@ -20,18 +20,25 @@
     <!-- Edad -->
     <div id="edad">
       <input type="text" class="fadeIn third" name="edad" placeholder="Edad" formControlName="edad">
+    
+      <!-- Mensaje de error para no ser un número válido -->
       <ng-container *ngIf="formAdministrador.get('edad')?.hasError('pattern') && formAdministrador.get('edad')?.touched">
         <br>
-        <small class="text-danger">La edad debe ser un número</small>
+        <small class="text-danger">La edad debe ser un número válido.</small>
+      </ng-container>
+    
+      <!-- Mensaje de error para no ser mayor de 18 -->
+      <ng-container *ngIf="formAdministrador.get('edad')?.hasError('mayorDe18') && formAdministrador.get('edad')?.touched">
+        <br>
+        <small class="text-danger">Debes tener más de 18 años.</small>
       </ng-container>
     </div>
-  
     <!-- DNI -->
     <div id="DNI">
       <input type="text" class="fadeIn third" name="DNI" placeholder="DNI" formControlName="DNI">
       <ng-container *ngIf="formAdministrador.get('DNI')?.hasError('pattern') && formAdministrador.get('DNI')?.touched">
         <br>
-        <small class="text-danger">El DNI debe ser un número</small>
+        <small class="text-danger">DNI invalido</small>
       </ng-container>
     </div>
   
@@ -66,6 +73,14 @@
         La foto es obligatoria
       </small>
     </div>
+
+    <!--<div class="captcha-container">
+      <re-captcha 
+        formControlName="captcha" 
+        siteKey="6LdBZ3YqAAAAALLmG7Jp4zxYIjoHbsSsqAr12t2-" 
+        (resolved)="resolved($event)">
+      </re-captcha>
+    </div>-->
   
     <input type="submit" class="fadeIn fourth" value="Registrarse" [disabled]="formAdministrador.invalid">
   </form>

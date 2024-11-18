@@ -1,0 +1,145 @@
+/* Fondo general */
+body {
+  background-color: #012442 !important;
+  color: #f7f9fc;
+}
+
+/* Contenedor principal */
+.card-mis-turnos {
+  background-color: #012442 !important;
+  color: #f7f9fc;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  margin: 20px auto;
+}
+
+/* Título de sección */
+.mis-turnos h2 {
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+/* Estilos para la tabla de turnos */
+.tabla-turnos {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tabla-turnos th, .tabla-turnos td {
+  padding: 15px;
+  text-align: left;
+}
+
+.tabla-turnos thead {
+  background-color: #007bff;
+  color: white;
+}
+
+.tabla-turnos tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.tabla-turnos tbody tr:nth-child(odd) {
+  background-color: #eaf2f8;
+}
+
+/* Estilo de botones */
+button {
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-right: 5px;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+button.btn-danger:hover {
+  background-color: #c82333;
+}
+
+button.btn-info {
+  background-color: #17a2b8;
+  color: white;
+}
+
+button.btn-info:hover {
+  background-color: #138496;
+}
+
+button.btn-warning {
+  background-color: #ffc107;
+  color: white;
+}
+
+button.btn-warning:hover {
+  background-color: #e0a800;
+}
+
+button.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+button.btn-success:hover {
+  background-color: #218838;
+}
+
+/* Estilos para filtros */
+.filtros {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 15px;
+}
+
+.filtros label {
+  font-weight: bold;
+  color: #f7f9fc;
+}
+
+.filtros input[type="text"] {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  width: 200px;
+}
+
+.tabla{
+  color:black;
+}
+
+//==============MODAL=====================
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+}
+
+textarea {
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}

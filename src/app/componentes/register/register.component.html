@@ -5,18 +5,25 @@
         <!-- Tabs Titles -->
 
         <h2 style="color:white">Registrarse</h2>
-        <div>
-            <h3 
-                [ngClass]="{'active': usuario === 'paciente', 'inactive': usuario !== 'paciente'}" 
-                (click)="usuario = 'paciente'">
-                Paciente
-            </h3>
-            <h3 
-                [ngClass]="{'active': usuario === 'especialista', 'inactive': usuario !== 'especialista'}" 
-                (click)="usuario = 'especialista'">
-                Especialista
-            </h3>
-        </div>
+
+        <div class="auto-fill-buttons">
+            <!-- Botón Especialista -->
+            <button 
+              (click)="usuario = 'especialista'" 
+              class="profile-button" 
+              [ngClass]="{'selected': usuario === 'especialista'}">
+              <img [src]="'https://static.vecteezy.com/system/resources/previews/018/914/708/non_2x/doctor-woman-flat-icon-png.png'" alt="Imagen de especialista" class="profile-img">
+            </button>
+          
+            <!-- Botón Paciente -->
+            <button 
+              (click)="usuario = 'paciente'" 
+              class="profile-button" 
+              [ngClass]="{'selected': usuario === 'paciente'}">
+              <img [src]="'https://cdn-icons-png.flaticon.com/512/387/387585.png'" alt="Imagen de paciente" class="profile-img">
+            </button>
+          </div>
+          
         
         <app-register-especialista *ngIf="usuario === 'especialista'"> </app-register-especialista>
         <app-register-paciente *ngIf="usuario === 'paciente'"> </app-register-paciente>

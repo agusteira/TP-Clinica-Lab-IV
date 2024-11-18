@@ -25,7 +25,7 @@ export class RegisterComponent {
   showErrorModal: boolean = false;
   errorMessage: string = "";
   formPaciente!: FormGroup;
-  usuario = "paciente";
+  usuario = "";
   
   constructor(private router: Router, ) {  //public auth: Auth, private firestore: Firestore
   }

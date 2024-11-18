@@ -14,8 +14,6 @@ export class FirebaseServices {
 
   constructor(private firestore: Firestore, private storage:Storage) { }
 
-
-
   //===================REGISTRAR PACIENTE===================
   async subirPaciente(form: FormGroup) {
     const col = collection(this.firestore, "usuarios");
@@ -38,7 +36,7 @@ export class FirebaseServices {
       url2 = await this.uploadImage(foto2, correo);
 
       // Subir datos a Firestore
-      await this.addUserToFirestore(col, { nombre, apellido, edad, DNI, obraSocial, correo, clave, foto1: url1, foto2: url2, tipoUsuario });
+      await this.addUserToFirestore(col, { nombre, apellido, edad, DNI, obraSocial, correo, clave, foto1: url1, foto2: url2, tipoUsuario, flag:"true" });
 
       console.log("Datos subidos correctamente");
       return true;
@@ -76,49 +74,72 @@ export class FirebaseServices {
 
 
   //===================REGISTRAR ESPECIALISTA===================
-  async subirEspecialista(form: FormGroup) {
+  async subirEspecialista(form: FormGroup, especialidadesSeleccionadas: string[]) {
     const col = collection(this.firestore, "usuarios");
   
     // Extraer valores del formulario
-    const { nombre, apellido, edad, DNI, especialidad, especialidadPersonalizada, correo, clave, foto } = this.extractFormEspecialista(form);
-    
-    // Verificar si la especialidad es "otra", y en tal caso, asignar la especialidad personalizada
-    const especialidadFinal = especialidad === "otra" ? especialidadPersonalizada : especialidad;
+    const { nombre, apellido, edad, DNI, correo, clave, foto } = this.extractFormEspecialista(form);
   
     const habilitado = "pendiente";
     const tipoUsuario = "especialista";
-  
     let foto1 = '';
   
     try {
       // Crear usuario y obtener resultado
       const userCreationResult = await this.createUser(correo, clave);
       if (typeof userCreationResult === 'string') {
-        return userCreationResult; // Retorna el error si no se creó el usuario
+        return userCreationResult;
       }
   
       // Subir imágenes y obtener URLs
       foto1 = await this.uploadImage(foto, correo);
   
-      // Subir datos a Firestore, usando la especialidad final
-      await this.addUserToFirestore(col, { 
-        nombre, 
-        apellido, 
-        edad, 
-        DNI, 
-        especialidad: especialidadFinal, // Aquí usamos la especialidadFinal
-        correo, 
-        clave, 
-        foto1, 
-        habilitado, 
-        tipoUsuario 
+      // Subir datos a Firestore, incluyendo las especialidades seleccionadas
+      await this.addUserToFirestore(col, {
+        nombre,
+        apellido,
+        edad,
+        DNI,
+        especialidades: especialidadesSeleccionadas, // Guardamos las especialidades seleccionadas
+        correo,
+        clave,
+        foto1,
+        habilitado,
+        tipoUsuario,
+        flag:"true"
       });
+
+      await this.crearHorariosEspecialista(correo, especialidadesSeleccionadas);
   
       console.log("Datos subidos correctamente");
       return true;
     } catch (error) {
       console.error("Error al subir los datos: ", error);
-      return this.handleError(error); // Manejo de errores más claro
+      return this.handleError(error);
+    }
+  }
+
+  private async crearHorariosEspecialista(correo: string, especialidades: string[]) {
+    const horariosCollection = collection(this.firestore, "HorariosEspecialistas");
+  
+    // Definir horarios por defecto para cada día
+    const disponibilidad = [
+      { dia: "lunes", horarios: [{ inicio: "08:00", fin: "19:00" }] },
+      { dia: "martes", horarios: [{ inicio: "08:00", fin: "19:00" }] },
+      { dia: "miércoles", horarios: [{ inicio: "08:00", fin: "19:00" }] },
+      { dia: "jueves", horarios: [{ inicio: "08:00", fin: "19:00" }] },
+      { dia: "viernes", horarios: [{ inicio: "08:00", fin: "19:00" }] },
+      { dia: "sábado", horarios: [{ inicio: "08:00", fin: "14:00" }] }
+    ];
+  
+    // Crear un documento de horarios para cada especialidad seleccionada
+    for (const especialidad of especialidades) {
+      await addDoc(horariosCollection, {
+        correo,
+        especialidad,
+        disponibilidad,
+        duracionTurno: 30
+      });
     }
   }
   
@@ -136,7 +157,7 @@ export class FirebaseServices {
     };
   }
 
-  //===================REGISTRAR ESPECIALISTA===================
+  //===================REGISTRAR ADMIN===================
   async subirAdmin(form: FormGroup) {
     const col = collection(this.firestore, "usuarios");
   
@@ -265,6 +286,50 @@ export class FirebaseServices {
     return false;
   }
 
+  async traerUsuarioSinCorreo(){
+    const usuariosCollection = collection(this.firestore, 'usuarios'); // Cambia 'usuarios' por el nombre de tu colección
+    const q = query(usuariosCollection, where('correo', '==', this.auth.currentUser?.email));
+
+    try {
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        console.log("No se encontró ningún usuario con ese correo.");
+        return null; // No se encontró usuario
+      }
+
+      // Si hay resultados, devolver el primer usuario encontrado
+      const usuarioDoc = querySnapshot.docs[0]; // Usualmente, un correo será único, así que tomamos el primero
+      const usuario = usuarioDoc.data();
+      return usuario;
+    } catch (error) {
+      console.error("Error al obtener el usuario:", error);
+      throw new Error("Error al obtener el usuario desde Firestore.");
+    }
+  }
+
+  async traerHorariosEspecialistas(): Promise<any[]> {
+    const usuariosCollection = collection(this.firestore, 'HorariosEspecialistas'); // Colección
+    const q = query(usuariosCollection, where('correo', '==', this.auth.currentUser?.email)); // Filtra por correo (puedes quitar el where si no necesitas filtro)
+  
+    try {
+      const querySnapshot = await getDocs(q); // Obtiene todos los documentos que cumplen con la condición
+  
+      if (querySnapshot.empty) {
+        console.log("No se encontraron documentos con ese correo.");
+        return []; // Devuelve un array vacío si no hay resultados
+      }
+  
+      // Mapeamos todos los documentos obtenidos a un array
+      const documentos = querySnapshot.docs.map(doc => doc.data());
+      return documentos; // Devuelve todos los documentos como un array
+    } catch (error) {
+      console.error("Error al obtener los documentos:", error);
+      throw new Error("Error al obtener los documentos desde Firestore.");
+    }
+  }
+  
+
+
   async traerUsuario(correo: string) {
     const usuariosCollection = collection(this.firestore, 'usuarios'); // Cambia 'usuarios' por el nombre de tu colección
     const q = query(usuariosCollection, where('correo', '==', correo));
@@ -291,6 +356,12 @@ export class FirebaseServices {
     return usuario!['tipoUsuario']
   }
 
+  async traerNombreApellido(correo:string){
+    const usuario = await this.traerUsuario(correo)
+    const nombre = usuario!['nombre'] + " " + usuario!['apellido']
+    return nombre
+  }
+
   async traerFlag(correo:string){
     const usuario = await this.traerUsuario(correo)
     return usuario!['flag']
@@ -307,6 +378,33 @@ export class FirebaseServices {
 
     try {
       const querySnapshot = await getDocs(usuariosCollection); // Obtener todos los documentos de la colección
+
+      if (querySnapshot.empty) {
+        console.log("No se encontraron usuarios.");
+        return []; // Si no hay usuarios, retornar un arreglo vacío
+      }
+
+      // Si hay documentos, mapearlos a un arreglo de usuarios
+      const usuarios = querySnapshot.docs.map(doc => {
+        return { id: doc.id, ...doc.data() }; // Devolvemos el id del documento y sus datos
+      });
+
+      return usuarios; // Devolver el arreglo de usuarios
+
+    } catch (error) {
+      console.error("Error al obtener los usuarios:", error);
+      throw new Error("Error al obtener los usuarios desde Firestore.");
+    }
+  }
+
+  async traerUsuariosPorTipo(tipo:string) {
+    const usuariosCollection = collection(this.firestore, 'usuarios'); // Acceder a la colección 'usuarios'
+
+    const usuariosQuery = query(usuariosCollection, where('tipoUsuario', '==', tipo));
+
+
+    try {
+      const querySnapshot = await getDocs(usuariosQuery); // Obtener todos los documentos de la colección
 
       if (querySnapshot.empty) {
         console.log("No se encontraron usuarios.");

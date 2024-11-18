@@ -21,13 +21,17 @@
             <br>
             <small class="text-danger">La edad debe ser un número</small>
         </ng-container>
+        <ng-container *ngIf="formPaciente.get('edad')?.hasError('mayorDe18') && formPaciente.get('edad')?.touched">
+            <br>
+            <small class="text-danger">Debes tener más de 18 años.</small>
+          </ng-container>
     </div>
 
     <div id="DNI">
         <input type="text" class="fadeIn third" name="DNI" placeholder="DNI" formControlName="DNI">
         <ng-container *ngIf="formPaciente.get('DNI')?.hasError('pattern') && formPaciente.get('DNI')?.touched">
             <br>
-            <small class="text-danger">El DNI debe ser un número</small>
+            <small class="text-danger">DNI invalido</small>
         </ng-container>
     </div>
 
@@ -82,10 +86,20 @@
         <img *ngIf="previewUrl1" [src]="previewUrl1" alt="Vista previa 1" class="preview-image">
         <img *ngIf="previewUrl2" [src]="previewUrl2" alt="Vista previa 2" class="preview-image">
     </div>
+    <div class="form-group text-center">
+        <div class="d-flex justify-content-center">
+            <ngx-recaptcha2 #captchaElem [siteKey]="siteKey" formControlName="recaptcha"></ngx-recaptcha2>
+        </div>
+    </div>
     
-
+    
+      
     <input type="submit" class="fadeIn fourth" value="Registrarse" [disabled]="formPaciente.invalid">
 </form>
+
+    <div class="captcha-container">
+
+    </div>
 
 <!-- Modal de error -->
 <div *ngIf="showErrorModal" class="modal-overlay">

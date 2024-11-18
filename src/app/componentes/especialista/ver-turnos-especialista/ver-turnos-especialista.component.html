@@ -1,0 +1,88 @@
+<app-nav-especialista></app-nav-especialista>
+<div class="card-mis-turnos">
+  <h2>Mis Turnos</h2>
+
+  <!-- Filtros de Especialidad y Paciente -->
+  <div class="filtros">
+    <label>Filtrar por Especialidad:</label>
+    <input type="text" [(ngModel)]="filtroEspecialidad" placeholder="Ingrese especialidad">
+    <label>Filtrar por Paciente:</label>
+    <input type="text" [(ngModel)]="filtroPaciente" placeholder="Ingrese paciente">
+  </div>
+
+  <!-- Tabla de Turnos -->
+  <table class="tabla-turnos">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Especialidad</th>
+        <th>Paciente</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody class="tabla">
+      <tr *ngFor="let turno of turnos | filtroDelEspecialista: filtroEspecialidad : filtroPaciente">
+        <td>{{ turno.fecha }}</td>
+        <td>{{ turno.horaInicio }} - {{ turno.horaFin }}</td>
+        <td>{{ turno.especialidad }}</td>
+        <td>{{ turno.nombrePaciente }}</td>
+        <td>{{ turno.estado }}</td>
+        <td>
+          <!-- Botón Cancelar Turno (si el estado permite cancelar) -->
+          <button *ngIf="turno.estado === 'pendiente'" class="btn btn-danger" (click)="abrirModal('cancelar', turno.id)">
+            Cancelar
+          </button>
+
+          <!-- Botón Rechazar Turno (si el estado permite rechazar) -->
+          <button *ngIf="turno.estado === 'pendiente'" class="btn btn-warning" (click)="abrirModal('rechazar', turno.id)">
+            Rechazar
+          </button>
+
+          <!-- Botón Aceptar Turno (si el estado permite aceptar) -->
+          <button *ngIf="turno.estado === 'pendiente'" class="btn btn-success" (click)="abrirModal('aceptar', turno.id)">
+            Aceptar
+          </button>
+
+          <!-- Botón Finalizar Turno (si el turno fue aceptado) -->
+          <button *ngIf="turno.estado === 'aceptado'" class="btn btn-primary" (click)="abrirModal('finalizar', turno.id)">
+            Finalizar
+          </button>
+
+          <!-- Botón Ver Reseña (si el turno tiene comentarios) -->
+          <button 
+              class="btn btn-info" 
+              *ngIf="(turno?.comentariosEspecialista?.length > 0) || (turno?.motivoCancelacion?.length > 0) || (turno.calificacion?.length > 0)" 
+              (click)="verComentario(turno.comentariosEspecialista, turno.motivoCancelacion, turno.calificacion)">
+              Ver comentarios
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal para confirmación y comentarios -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <h3>{{ modalTitle }}</h3>
+    <textarea [(ngModel)]="modalComment" *ngIf="accion !== 'verResena' && accion !== 'aceptar'" rows="4" placeholder="Ingrese su comentario"></textarea>
+    <p *ngIf="accion === 'verResena'">{{ modalComment }}</p>
+    <button (click)="confirmarAccion()" *ngIf="accion !== 'verResena'" class="btn btn-primary">Confirmar</button>
+    <button (click)="cerrarModal()" class="btn btn-secondary">Cerrar</button>
+  </div>
+</div>
+
+<!-- Nuevo Modal para Ver Comentarios -->
+<div class="modal" *ngIf="showComentarioModal">
+  <div class="modal-content">
+    <h3>Comentarios del Turno</h3>
+    <p *ngIf="comentariosEspecialista">Comentario del Especialista: {{ comentariosEspecialista }}</p>
+    <p *ngIf="motivoCancelacion">Motivo de Cancelación: {{ motivoCancelacion }}</p>
+    <p *ngIf="calificacionAtencion">Calificacion atención: {{ calificacionAtencion }}</p>
+    <button (click)="cerrarComentarioModal()" class="btn btn-secondary">Cerrar</button>
+  </div>
+</div>
+
+<app-spinner *ngIf="spinner"></app-spinner>

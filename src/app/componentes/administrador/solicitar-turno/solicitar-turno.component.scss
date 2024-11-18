@@ -1,0 +1,167 @@
+.solicitar-turno-card {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #004179 !important; 
+    color:white
+  }
+  
+  .solicitar-turno-card h2 {
+    text-align: center;
+    color: white;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  form div {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    font-weight: bold;
+    color: white;
+  }
+  
+  select {
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+  }
+  
+  button {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #1d7431;
+  }
+  
+  button:disabled {
+    background-color:  #444444;
+    color:white;
+    cursor: not-allowed;
+  }
+  
+  .options-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .option-item {
+    padding: 10px 15px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color:black
+  }
+  
+  .option-item:hover {
+    background-color: #d0d0d0;
+  }
+  
+  .option-item.selected {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+  
+  
+  .card-especialista {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+  }
+  
+  .foto-especialista {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px; /* Bordes redondeados */
+    object-fit: cover;
+    margin-bottom: 8px;
+  }
+
+  .card-especialidad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 180px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+  }
+
+  .foto-especialidad {
+    width: 150px;
+    height: 80px;
+    border-radius: 10px; /* Bordes redondeados */
+    object-fit: cover;
+    margin-bottom: 8px;
+  }
+  
+  .nombre-especialista {
+    font-size: 0.9em;
+    color: black;
+  }
+  
+  .card-especialista:hover {
+    background-color: #d0d0d0;
+  }
+  
+  .card-especialista.selected {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .card-fecha {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px; /* Ancho fijo para hacer la tarjeta cuadrada */
+    height: 100px; /* Altura igual al ancho para asegurar que sea cuadrada */
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .card-fecha:hover {
+    background-color: #d0d0d0;
+  }
+  
+  .card-fecha.selected {
+    background-color: #007bff;
+    color: white;
+  }
+  
