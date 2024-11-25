@@ -5,7 +5,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';  // Importa FormsModule
-import { Firestore } from '@angular/fire/firestore';
+import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 import { FirebaseServices } from '../../services/firebase.services';
 import { SpinnerComponent } from "../../spinner/spinner.component";
 
@@ -34,7 +34,9 @@ export class LoginComponent {
   ];
   
 
-  constructor(private router: Router, private auth: Auth, private fbsvc: FirebaseServices) { // Inyecta Router
+  constructor(private router: Router, private auth: Auth, private fbsvc: FirebaseServices,
+    private firestore: Firestore
+  ) { // Inyecta Router
 
   }
 
@@ -63,29 +65,29 @@ export class LoginComponent {
       const flag = await this.fbsvc.traerFlag(correo);
       if(flag=="true"){
         const tipoUsuario = await this.fbsvc.traerTipoUsuario(correo);
-
-      switch(tipoUsuario){
-        case"paciente":
-          this.router.navigate(['paciente/home']);
-          break
-        case"admin":
-          this.redirigir("admin/home")
-          break
-        case"especialista":
-          const habilitacionEspecialista = await this.fbsvc.verificarHabilitacion(correo)
-          switch(habilitacionEspecialista){
-            case"aprobado":
-              this.router.navigate(['/especialista/home']);
-              break
-            case"pendiente":
-              this.setModal("PENDIENTE", "Su usuario todavia esta pendiente de aprobacion")
-              break
-            case"rechazado":
-              this.setModal("RECHAZADO", "Su usuario ha sido rechazado")
-              break
-          }
-          break
-      }
+        this.LogIniciarSesion(correo)
+        switch(tipoUsuario){
+          case"paciente":
+            this.router.navigate(['paciente/home']);
+            break
+          case"admin":
+            this.redirigir("admin/home")
+            break
+          case"especialista":
+            const habilitacionEspecialista = await this.fbsvc.verificarHabilitacion(correo)
+            switch(habilitacionEspecialista){
+              case"aprobado":
+                this.router.navigate(['/especialista/home']);
+                break
+              case"pendiente":
+                this.setModal("PENDIENTE", "Su usuario todavia esta pendiente de aprobacion")
+                break
+              case"rechazado":
+                this.setModal("RECHAZADO", "Su usuario ha sido rechazado")
+                break
+            }
+            break
+        }
       }else{
         this.setModal("ERROR","Este usuario NO esta habilitado para entrar");
       }
@@ -129,13 +131,30 @@ export class LoginComponent {
   
   
 
-  /*LogIniciarSesion(){
-    let col = collection(this.firestore, "logIniciarSesion");
-    addDoc (col, {
-      "user": this.correo,
-      "fecha": Date.now()
-    })
-  }*/
+  LogIniciarSesion(correo:string) {
+    const col = collection(this.firestore, "logIniciarSesion");
+    
+    // Crear una instancia de la fecha actual
+    const now = new Date();
+  
+    // Formatear la fecha como YYYY-MM-DD
+    const dia = now.toISOString().split('T')[0]; // Esto devuelve solo la parte de la fecha en el formato YYYY-MM-DD
+    
+    // Formatear la hora como HH:mm
+    const hora = now.toTimeString().split(' ')[0].slice(0, 5); // Esto devuelve solo HH:mm
+    
+    // Formatear la fecha completa como datetime ISO
+    const datetime = now.toISOString();
+  
+    // Agregar el documento a Firestore
+    addDoc(col, {
+      user: correo,
+      dia: dia,
+      hora: hora,
+      datetime: datetime,
+    });
+  }
+  
 
   closeModal() {
     this.showErrorModal = false; // Ocultar el modal

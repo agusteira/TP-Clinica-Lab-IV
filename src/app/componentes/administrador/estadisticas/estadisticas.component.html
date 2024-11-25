@@ -1,0 +1,44 @@
+<app-nav-admin ></app-nav-admin>
+
+<!--[@slideInOut]-->
+<div class="card-mis-turnos" >
+    <h2>Cantidad de turnos por especialidad</h2>
+    <div style="display: block;">
+        <canvas class="canvasss" id="turnosPorEspecialidadChart"></canvas>
+      </div>
+</div>
+
+<div class="card-mis-turnos">
+    <h2>Cantidad de turnos por día</h2>
+    <div style="display: block;">
+      <canvas id="turnosPorDiaChart"></canvas>
+    </div>
+  </div>
+  
+  <div class="card-mis-turnos">
+    <h2>Cantidad de turnos solicitados por médico</h2>
+    <div style="display: block;">
+      <canvas id="turnosPorMedicoChart"></canvas>
+    </div>
+  </div>
+  
+
+<div class="card-mis-turnos" >
+    <h2>Logs de la clinica</h2>
+    <table class="tabla-turnos">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Usuario</th>
+    </tr>
+    </thead>
+    <tbody class="tabla">
+    <tr *ngFor="let log of logs">
+        <td>{{ log.dia }}</td>
+        <td>{{ log.hora }}</td>
+        <td>{{ log.user }}</td>
+    </tr>
+    </tbody>
+</table>
+</div>
