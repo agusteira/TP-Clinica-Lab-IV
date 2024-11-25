@@ -2,7 +2,7 @@
 <app-nav-paciente *ngIf="params.tipo == 'paciente'"></app-nav-paciente>
 <app-nav-especialista *ngIf="params.tipo == 'especialista'"></app-nav-especialista>
 
-<div *ngIf="usuario != null" class="contenedor">
+<div *ngIf="usuario != null" class="contenedor" [@slideInOut]>
   <div class="card2 card2-background">
     <div class="row no-gutters">
       <!-- Columna 1: Información del Usuario -->
@@ -58,8 +58,35 @@
         <div class="card2-image">
           <img *ngIf="usuario.foto1" [src]="usuario.foto1" alt="Foto de Usuario" class="img-fluid">
           <img *ngIf="usuario.foto2" [src]="usuario.foto2" alt="Foto Adicional" class="img-fluid mt-3">
+          <div class="d-flex justify-content-start align-items-center mt-3 w-100">
+            <select 
+              class="form-select" 
+              *ngIf="usuario.tipoUsuario == 'paciente'" 
+              [(ngModel)]="especialidadSeleccionada" 
+              style="flex: 3; height: 50px;">
+              <option [value]="null" disabled selected>Seleccione una especialidad</option>
+              <option *ngFor="let especialidad of especialidades" [value]="especialidad">
+                {{ especialidad }}
+              </option>
+            </select>
+            <button 
+              class="btn btn-success me-2" 
+              (click)="exportarHistoriaClinicaFiltrada(especialidadSeleccionada)"
+              *ngIf="usuario.tipoUsuario == 'paciente'" 
+              [disabled]="!especialidadSeleccionada" 
+              style="flex: 1; height: 40px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5V12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10.4a.5.5 0 0 1 1 0V12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V10.4a.5.5 0 0 1 .5-.5z"/>
+                <path d="M5.646 4.854a.5.5 0 0 1 .708-.708L8 6.793l1.646-1.647a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2z"/>
+                <path d="M8 1.5a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5z"/>
+              </svg>
+            </button>
+          </div>
+          
         </div>
       </div>
+      
+      
     </div>
   </div>
 

@@ -622,4 +622,83 @@ export class FirebaseServices {
     }
   }
   
+  async cargarTurnosFinalizadosSinCorte(correo:string ){
+    const q = query(
+      collection(this.firestore, 'Turnos'),
+      where('pacienteId', '==', correo),
+      where('estado', '==', "realizado"),
+    );
+    const querySnapshot = await getDocs(q);
+
+    const turnos = querySnapshot.docs.map(doc => {
+      const turno = doc.data();
+      turno['id'] = doc.id; // Guardamos el ID del documento
+      return turno;
+    });
+    // Ordenar los turnos por fecha y hora
+    const turnosOrdenados = turnos.sort((a, b) => {
+      // Convertir fecha y hora a objetos Date para comparar
+      const fechaHoraA = this.convertirAFecha(a['fecha'], a['horaInicio']);
+      const fechaHoraB = this.convertirAFecha(b['fecha'], b['horaInicio']);
+      return fechaHoraB.getTime() - fechaHoraA.getTime(); // Orden descendente
+    });
+
+    // Retornar solo los 3 últimos turnos
+    return turnosOrdenados;
+  }
+
+  async cargarTurnosFinalizadosConCorte(correo:string ){
+    const q = query(
+      collection(this.firestore, 'Turnos'),
+      where('pacienteId', '==', correo),
+      where('estado', '==', "realizado"),
+    );
+    const querySnapshot = await getDocs(q);
+
+    const turnos = querySnapshot.docs.map(doc => {
+      const turno = doc.data();
+      turno['id'] = doc.id; // Guardamos el ID del documento
+      return turno;
+    });
+    // Ordenar los turnos por fecha y hora
+    const turnosOrdenados = turnos.sort((a, b) => {
+      // Convertir fecha y hora a objetos Date para comparar
+      const fechaHoraA = this.convertirAFecha(a['fecha'], a['horaInicio']);
+      const fechaHoraB = this.convertirAFecha(b['fecha'], b['horaInicio']);
+      return fechaHoraB.getTime() - fechaHoraA.getTime(); // Orden descendente
+    });
+
+    // Retornar solo los 3 últimos turnos
+    return turnosOrdenados.slice(0, 3);
+  }
+  private convertirAFecha(fecha: string, hora: string): Date {
+    const [dia, mes, anio] = fecha.split('/').map(Number);
+    const [horas, minutos] = hora.split(':').map(Number);
+    return new Date(anio, mes - 1, dia, horas, minutos);
+  }
+
+  
+  async traerTurnosPorUsuario(correo: string){
+    const q = query(
+      collection(this.firestore, 'Turnos'),
+      where('pacienteId', '==', correo),
+    );
+    const querySnapshot = await getDocs(q);
+
+    const turnos = querySnapshot.docs.map(doc => {
+      const turno = doc.data();
+      turno['id'] = doc.id; // Guardamos el ID del documento
+      return turno;
+    });
+    // Ordenar los turnos por fecha y hora
+    const turnosOrdenados = turnos.sort((a, b) => {
+      // Convertir fecha y hora a objetos Date para comparar
+      const fechaHoraA = this.convertirAFecha(a['fecha'], a['horaInicio']);
+      const fechaHoraB = this.convertirAFecha(b['fecha'], b['horaInicio']);
+      return fechaHoraB.getTime() - fechaHoraA.getTime(); // Orden descendente
+    });
+
+    // Retornar solo los 3 últimos turnos
+    return turnosOrdenados;
+  }
 }

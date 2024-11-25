@@ -8,13 +8,27 @@ import { Auth, getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import { SpinnerComponent } from "../../spinner/spinner.component";
 import { TurnosService } from '../../services/turnos.service';
 import { FormatoHoraPipe } from '../../pipelines/formato-hora.pipe';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-solicitar-turno',
   standalone: true,
   imports: [CommonModule, FormsModule, NavPacienteComponent, SpinnerComponent, FormatoHoraPipe],
   templateUrl: './solicitar-turno.component.html',
-  styleUrls: ['./solicitar-turno.component.scss']
+  styleUrls: ['./solicitar-turno.component.scss'],
+  animations: [
+    trigger('slideInOut', [
+      // Página entrando desde abajo
+      transition(':enter', [
+        style({ transform: 'translateY(100%)', opacity: 0 }),
+        animate('1300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 })),
+      ]),
+      // Página saliendo hacia abajo
+      transition(':leave', [
+        animate('1300ms ease-in', style({ transform: 'translateY(100%)', opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class SolicitarTurnoComponent implements OnInit{
   especialidades: string[] = [];

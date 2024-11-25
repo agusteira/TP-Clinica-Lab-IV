@@ -1,5 +1,8 @@
 <div *ngIf="listaUsuarios.length > 0">
   <div class="d-flex flex-column">
+    <button class="btn btn-success" (click)="exportarUsuariosExcel()">
+      Exportar usuarios EXCEL
+    </button>
     <div *ngFor="let usuario of listaUsuarios" class="card2 mb-4 card2-background" style="width: 100%;">
       <div class="row no-gutters" *ngIf="!(usuario.tipoUsuario == 'especialista' && (usuario.habilitado =='pendiente' || usuario.habilitado =='rechazado'))">
         <!-- Columna 1: Datos del usuario -->
@@ -41,6 +44,9 @@
               <!-- Si el flag es falso (habilitado) mostramos el botón de habilitar -->
               <button *ngIf="usuario.flag=='false'" class="btn btn-success" (click)="habilitarUsuario(usuario.id)">
                 Habilitar
+              </button>
+              <button class="btn btn-success" (click)="exportarTurnosExcel(usuario)" *ngIf="usuario.tipoUsuario == 'paciente'">
+                Exportar turnos
               </button>
             </div>
           </div>

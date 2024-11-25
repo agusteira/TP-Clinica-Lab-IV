@@ -1,12 +1,14 @@
 <app-nav-paciente></app-nav-paciente>
-<div class="card-mis-turnos">
+<div class="card-mis-turnos" [@slideInOut]>
   <h2>Mis Turnos</h2>
 
   <div class="filtros">
-    <label>Filtrar por Especialidad:</label>
+    <label>Especialidad:</label>
     <input type="text" [(ngModel)]="filtroEspecialidad" placeholder="Ingrese especialidad">
-    <label>Filtrar por Especialista:</label>
-    <input type="text" [(ngModel)]="filtroEspecialista" placeholder="Ingrese especialista">
+    <label>Paciente:</label>
+    <input type="text" [(ngModel)]="filtroEspecialista" placeholder="Ingrese paciente">
+    <label>Historia clinica:</label>
+    <input type="text" [(ngModel)]="filtroHistoriaClinica" placeholder="Ingrese el dato">
   </div>
   
   <table class="tabla-turnos">
@@ -21,7 +23,7 @@
       </tr>
     </thead>
     <tbody class="tabla">
-      <tr *ngFor="let turno of turnos | filtroTurnos: filtroEspecialidad : filtroEspecialista">
+      <tr *ngFor="let turno of turnos | filtroTurnos: filtroEspecialidad : filtroEspecialista : filtroHistoriaClinica">
         <td>{{ turno.fecha }}</td>
         <td>{{ turno.horaInicio }} - {{ turno.horaFin }}</td>
         <td>{{ turno.especialidad }}</td>

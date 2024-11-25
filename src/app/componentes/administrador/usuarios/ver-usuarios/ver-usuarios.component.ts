@@ -3,6 +3,8 @@ import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/cor
 import { FirebaseServices } from '../../../../services/firebase.services';
 import { SpinnerComponent } from "../../../../spinner/spinner.component";
 import { EspecialidadPipe } from '../../../../pipelines/especialidad.pipe';
+import * as XLSX from 'xlsx'; // Importar la librería xlsx
+import { saveAs } from 'file-saver'; // Importar file-saver
 
 @Component({
   selector: 'app-ver-usuarios',
@@ -65,5 +67,64 @@ export class VerUsuariosComponent implements OnChanges, OnInit {
   }
   objectKeys(obj: any): string[] {
     return Object.keys(obj || {});
+  }
+
+  exportarUsuariosExcel() {
+    // Preparar los datos en formato de arreglo plano
+    const datos = this.listaUsuarios.map((usuario) => ({
+      Nombre: usuario.nombre,
+      Apellido: usuario.apellido,
+      Edad: usuario.edad,
+      DNI: usuario.DNI,
+      Correo: usuario.correo,
+      TipoUsuario: usuario.tipoUsuario,
+      ObraSocial: usuario.tipoUsuario === 'paciente' ? usuario.obraSocial : '-',
+      Especialidades: usuario.tipoUsuario === 'especialista' ? usuario.especialidades.join(', ') : '-', // Convertir el array a string
+      //Habilitado: usuario.tipoUsuario === 'especialista' ? usuario.habilitado : '-',
+    }));
+
+    // Crear un libro de trabajo y una hoja de trabajo
+    const hojaTrabajo = XLSX.utils.json_to_sheet(datos);
+    const libroTrabajo = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libroTrabajo, hojaTrabajo, 'Usuarios');
+
+    // Generar el archivo Excel y guardarlo
+    const excelBuffer = XLSX.write(libroTrabajo, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    const archivo = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(archivo, 'usuarios.xlsx');
+  }
+
+  async exportarTurnosExcel(usuario:any) {
+    this.spinner = true
+    const turnos = await this.firebaseService.traerTurnosPorUsuario(usuario.correo)
+    console.log(turnos)
+    const datos = turnos.map((turno) => ({
+      Fecha: turno['fecha'] || '-',
+      Hora: turno['horaInicio'] || '-',
+      NombreEspecialista: turno['nombreEspecialista'] || '-',
+      NombrePaciente: turno['nombrePaciente'] || '-',
+      Especialidad: turno['especialidad'] || '-',
+      Estado: turno['estado'] || '-',
+      ComentariosEspecialista: turno['comentariosEspecialista'] || '-',
+      Calificacion: turno['calificacion'] || '-',
+      MotivoCancelacion: turno['motivoCancelacion'] || '-',
+    }));
+    
+
+    const hojaTrabajo = XLSX.utils.json_to_sheet(datos);
+    const libroTrabajo = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libroTrabajo, hojaTrabajo, `Turnos-${usuario.nombre}_${usuario.apellido}`);
+
+    // Generar el archivo Excel y guardarlo
+    const excelBuffer = XLSX.write(libroTrabajo, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    const archivo = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(archivo, `Turnos-${usuario.nombre}${usuario.apellido}.xlsx`);
+    this.spinner = false
   }
 }

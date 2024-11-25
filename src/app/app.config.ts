@@ -7,6 +7,7 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { routes } from './app.routes';
+import { provideAnimations } from '@angular/platform-browser/animations'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
+    provideAnimations(),
     provideFirebaseApp(() => initializeApp({"projectId":"clinica-1fd9a","appId":"1:57064915784:web:9b0486fce89c520b2c297d","storageBucket":"clinica-1fd9a.firebasestorage.app","apiKey":"AIzaSyCy3xdgzcTmR2_Kr1wnkjRTGDkErd02GXY","authDomain":"clinica-1fd9a.firebaseapp.com","messagingSenderId":"57064915784"})), provideAuth(() => getAuth()), provideFirestore(() => getFirestore()), provideStorage(() => getStorage()),
   ]
 };

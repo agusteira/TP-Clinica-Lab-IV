@@ -3,18 +3,31 @@ import { SpinnerComponent } from "../../../spinner/spinner.component";
 import { NavPacienteComponent } from "../../navbar/nav-paciente/nav-paciente.component";
 import { TurnosService } from '../../../services/turnos.service';
 import { FirebaseServices } from '../../../services/firebase.services';
-
+import { trigger, transition, style, animate } from '@angular/animations';
 import { FormatoHoraPipe } from "../../../pipelines/formato-hora.pipe";
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Auth } from '@angular/fire/auth';
 import { NavAdminComponent } from "../../navbar/nav-admin/nav-admin.component";
 
 @Component({
   selector: 'app-solicitar-turno',
   standalone: true,
-  imports: [SpinnerComponent, NavPacienteComponent, FormatoHoraPipe, CommonModule, NavAdminComponent],
+  imports: [SpinnerComponent, NavPacienteComponent, FormatoHoraPipe, CommonModule, NavAdminComponent, NgClass],
   templateUrl: './solicitar-turno.component.html',
-  styleUrl: './solicitar-turno.component.scss'
+  styleUrl: './solicitar-turno.component.scss',
+  animations: [
+    trigger('slideInOut', [
+      // Página entrando desde abajo
+      transition(':enter', [
+        style({ transform: 'translateY(100%)', opacity: 0 }),
+        animate('1300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 })),
+      ]),
+      // Página saliendo hacia abajo
+      transition(':leave', [
+        animate('1300ms ease-in', style({ transform: 'translateY(100%)', opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class SolicitarTurnoAdminComponent {
   especialidades: string[] = [];

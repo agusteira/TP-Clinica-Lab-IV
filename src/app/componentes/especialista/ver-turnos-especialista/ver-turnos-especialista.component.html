@@ -10,7 +10,7 @@
     <label>Paciente:</label>
     <input type="text" [(ngModel)]="filtroPaciente" placeholder="Ingrese paciente">
     <label>Historia clinica:</label>
-    <input type="text" [(ngModel)]="filtroPaciente" placeholder="Ingrese el dato">
+    <input type="text" [(ngModel)]="filtroHistoriaClinica" placeholder="Ingrese el dato">
   </div>
 
   <!-- Tabla de Turnos -->
@@ -26,7 +26,7 @@
       </tr>
     </thead>
     <tbody class="tabla">
-      <tr *ngFor="let turno of turnos | filtroDelEspecialista: filtroEspecialidad : filtroPaciente">
+      <tr *ngFor="let turno of turnos | filtroDelEspecialista: filtroEspecialidad : filtroPaciente : filtroHistoriaClinica">
         <td>{{ turno.fecha }}</td>
         <td>{{ turno.horaInicio }} - {{ turno.horaFin }}</td>
         <td>{{ turno.especialidad }}</td>

@@ -18,6 +18,7 @@ import { FirebaseServices } from '../../../services/firebase.services';
 export class VerTurnosEspecialistaComponent implements OnInit {
   turnos: any[] = [];
   filtroEspecialidad: string = '';
+  filtroHistoriaClinica:string = ''
   filtroPaciente: string = '';
   especialistaId: string | null = null;
 
@@ -35,6 +36,7 @@ export class VerTurnosEspecialistaComponent implements OnInit {
   calificacionAtencion : string | null = null;
 
   spinner:boolean = false;
+  
 
   //Historia clinica
   showModalHistoriaClinica :boolean = false;
@@ -273,20 +275,24 @@ export class VerTurnosEspecialistaComponent implements OnInit {
       this.datosVariables = []
     })
     .catch(error => console.error('Error en el componente:', error));
-
-
     this.spinner = false
   }
 
   async verificarQueNoSeAgregoLaHistoriaClinica(turno: any): Promise<void> {
     const paciente = await this.fbsvc.traerUsuario(turno.pacienteId);
-    // Evaluamos la condición y almacenamos el resultado en una propiedad del turno
+
+    if(paciente!['historiaClinica']['datosVariables'][turno.id]){
+      turno.historiaClinica = paciente!['historiaClinica']['datosVariables'][turno.id];
+      console.log(turno.historiaClinica )
+    }
+    
     turno.mostrarBotonAgregarHistoria =
       !paciente!['historiaClinica'] ||
       !paciente!['historiaClinica']['datosVariables'] ||
       !paciente!['historiaClinica']['datosVariables'][turno.id];
 
       this.cdr.detectChanges();
+      
   }
   
 }
