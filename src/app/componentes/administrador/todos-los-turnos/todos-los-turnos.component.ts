@@ -6,6 +6,7 @@ import { NavPacienteComponent } from '../../navbar/nav-paciente/nav-paciente.com
 import { CommonModule } from '@angular/common';
 import { FiltroTurnosPipe } from '../../../pipelines/filtro-turnos.pipe';
 import { NavAdminComponent } from '../../navbar/nav-admin/nav-admin.component';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 
 @Component({
@@ -13,7 +14,21 @@ import { NavAdminComponent } from '../../navbar/nav-admin/nav-admin.component';
   standalone: true,
   imports: [NavAdminComponent, CommonModule, FiltroTurnosPipe, FormsModule],
   templateUrl: './todos-los-turnos.component.html',
-  styleUrl: './todos-los-turnos.component.scss'
+  styleUrl: './todos-los-turnos.component.scss',
+  animations: [
+    trigger('slideInOut', [
+      // Página entrando desde abajo
+      transition(':enter', [
+        style({ transform: 'translateY(100%)', opacity: 0 }),
+        animate('1300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 })),
+      ]),
+      // Página saliendo hacia abajo
+      transition(':leave', [
+        animate('1300ms ease-in', style({ transform: 'translateY(100%)', opacity: 0 })),
+      ]),
+    ]),
+  ],
+  
 })
 export class TodosLosTurnosComponent {
   turnos: any[] = [];

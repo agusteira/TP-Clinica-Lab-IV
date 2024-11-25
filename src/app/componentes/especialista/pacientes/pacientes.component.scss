@@ -1,0 +1,526 @@
+/* Fondo general de la página */
+body {
+    background-color: #f7f9fc; /* Fondo suave, gris claro */
+    color: #333; /* Color de texto */
+  }
+  
+  /* Card Estilizada Principal */
+  .card {
+    border: none;
+    border-radius: 15px; /* Bordes redondeados */
+    margin-top: 20px; /* Espacio arriba de la card */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  }
+  
+  /* Header de la Card */
+  .card-header {
+    background-color: #007bff; /* Color de fondo del header de la card */
+    color: white; /* Color del texto en el header */
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+  
+  /* Body de la Card */
+  .card-body {
+    padding: 30px; /* Aumentamos el padding para que haya espacio dentro de la card */
+    background-color: #004179 !important; /* Color de fondo del header de la card */
+    color: white;
+  }
+  
+  /* Card Estilizada de los Usuarios (cards dentro del contenedor de usuarios) */
+  .card2 {
+    border: none;
+    border-radius: 25px; /* Bordes redondeados */
+    margin-top: 20px; /* Espacio arriba de la card */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave y más difusa */
+    overflow: hidden; /* Para que los bordes redondeados sean efectivos */
+  }
+  
+  /* Fondo de las Cards de los Usuarios */
+  .card2-background {
+    background-color: #012442; /* Color de fondo para toda la card */
+    color: white; /* Color de texto blanco para que sea legible */
+  }
+  
+  /* Padding del cuerpo de las cards de usuarios */
+  .card2-body {
+    padding: 30px; /* Aumentamos el padding para que haya espacio dentro de la card */
+    background-color: #012442; /* Fondo de la parte interna de la card */
+  }
+  
+  /* Imagen de las cards de los usuarios */
+  .card2-img-top, .img-fluid {
+    object-fit: cover; /* Asegura que las imágenes no se deformen */
+    border-radius: 20px; /* Bordes redondeados en las imágenes */
+  }
+  
+  /* Espaciado entre botones */
+  .row .col-md-4.mb-3 {
+    margin-bottom: 20px;
+  }
+  
+  /* Estilo de los botones */
+  button {
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 10px; /* Bordes redondeados en los botones */
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Colores de los botones */
+  button.btn-primary {
+    background-color: #007bff;
+    border: none;
+  }
+  
+  button.btn-primary:hover {
+    background-color: #0056b3; /* Sombra más oscura al pasar el mouse */
+  }
+  
+  button.btn-warning {
+    background-color: #ffc107;
+    border: none;
+  }
+  
+  button.btn-warning:hover {
+    background-color: #e0a800;
+  }
+  
+  button.btn-success {
+    background-color: #28a745;
+    border: none;
+  }
+  
+  button.btn-success:hover {
+    background-color: #218838;
+  }
+  
+  /* Espaciado de las secciones */
+  .mt-4 {
+    margin-top: 20px;
+  }
+  
+  
+  /*===========CREAR USUARIOS=============*/
+  
+  
+  .wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column; 
+    justify-content: center;
+    width: 100%;
+    min-height: 100%;
+    padding: 20px;
+  }
+  
+  #formContent {
+    -webkit-border-radius: 10px 10px 10px 10px;
+    border-radius: 10px 10px 10px 10px;
+    background: #fff;
+    padding: 30px;
+    width: 100%;
+    max-width: 650px;
+    position: relative;
+    padding: 0px;
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    text-align: center;
+    background-color: #012442;
+  }
+  
+  #formFooter {
+    background-color: #f6f6f6;
+    border-top: 1px solid #dce8f1;
+    padding: 25px;
+    text-align: center;
+    -webkit-border-radius: 0 0 10px 10px;
+    border-radius: 0 0 10px 10px;
+    background-color: #012442;
+  }
+  
+  /* Aplica los estilos solo a los h3 dentro de #formContent */
+  #formContent .form-h3 {
+    margin: 0 20px; /* Agrega margen de 20px a la izquierda y derecha de cada h3 */
+    cursor: pointer; /* Estilo para indicar que es clickeable */
+    font-weight: normal; /* No ponerlos en negrita por defecto */
+  }
+  
+  /* Centra los h3 dentro de #formContent con flexbox */
+  #formContent .row.center {
+    display: flex;
+    justify-content: center; /* Centra los h3 horizontalmente */
+    gap: 20px; /* Espacio de 20px entre los h3 */
+    margin-bottom: 20px; /* Agregar margen inferior a la fila */
+  }
+  
+  /* Estilos para los estados de los h3 */
+  #formContent .form-h3.active {
+    color: #007bff; /* Color azul cuando está activo */
+    font-weight: bold; /* Poner en negrita el h3 activo */
+  }
+  
+  #formContent .form-h3.inactive {
+    color: #999; /* Color gris cuando está inactivo */
+  }
+  
+  
+  
+  
+  /* TABS */
+  
+  h2.inactive {
+    color: #7a7a7a;
+  }
+  
+  h2.active {
+      color: #cccccc;
+      border-bottom: 2px solid #5fbae9;
+  }
+  
+  h3.inactive {
+      color: #7a7a7a;
+    }
+    
+  h3.active {
+      color: #cccccc;
+      border-bottom: 2px solid #5fbae9;
+  }
+  
+  
+  
+  /* FORM TYPOGRAPHY*/
+  
+  input[type=button], input[type=submit], input[type=reset]  {
+    background-color: #56baed;
+    border: none;
+    color: white;
+    padding: 15px 80px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 13px;
+    -webkit-box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+    box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    margin: 5px 20px 40px 20px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
+    background-color: #39ace7;
+  }
+  
+  input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
+    -moz-transform: scale(0.95);
+    -webkit-transform: scale(0.95);
+    -o-transform: scale(0.95);
+    -ms-transform: scale(0.95);
+    transform: scale(0.95);
+  }
+  
+  input[type=text], input[type =password] {
+    background-color: #f6f6f6;
+    border: none;
+    color: #0d0d0d;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px;
+    width: 85%;
+    border: 2px solid #f6f6f6;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+  
+  }
+  
+  input[type=text]:focus {
+    background-color: #fff;
+    border-bottom: 2px solid #5fbae9;
+  }
+  
+  input[type=text]:placeholder {
+    color: #cccccc;
+  }
+  
+  select {
+      background-color: #f6f6f6;
+      border: 2px solid #f6f6f6;
+      color: #0d0d0d;
+      padding: 15px 32px;
+      text-align: center;
+      font-size: 16px;
+      margin: 5px;
+      width: 85%;
+      border-radius: 5px;
+      transition: all 0.5s ease-in-out;
+      appearance: none; /* Elimina el estilo predeterminado del navegador */
+  }
+  
+  /* Estilo para el estado enfocado */
+  select:focus {
+      background-color: #fff;
+      border-bottom: 2px solid #5fbae9;
+  }
+  
+  /* Opcional: Agregar un cursor pointer para mejorar la experiencia del usuario */
+  select:hover {
+      cursor: pointer;
+  }
+  
+  
+  
+  /* Fondo general de la página */
+body {
+    background-color: #f7f9fc; /* Fondo suave, gris claro */
+    color: #333; /* Color de texto */
+  }
+  
+  /* Card Estilizada Principal */
+  .card {
+    border: none;
+    border-radius: 15px; /* Bordes redondeados */
+    margin-top: 20px; /* Espacio arriba de la card */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  }
+  
+  /* Header de la Card */
+  .card-header {
+    background-color: #007bff; /* Color de fondo del header de la card */
+    color: white; /* Color del texto en el header */
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+  
+  /* Body de la Card */
+  .card-body {
+    padding: 30px; /* Aumentamos el padding para que haya espacio dentro de la card */
+    background-color: #004179 !important; /* Color de fondo del header de la card */
+    color: white;
+  }
+  
+  /* Card Estilizada de los Usuarios (cards dentro del contenedor de usuarios) */
+  .card2 {
+    border: none;
+    border-radius: 25px; /* Bordes redondeados */
+    margin-top: 20px; /* Espacio arriba de la card */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave y más difusa */
+    overflow: hidden; /* Para que los bordes redondeados sean efectivos */
+  }
+  
+  /* Fondo de las Cards de los Usuarios */
+  .card2-background {
+    background-color: #012442; /* Color de fondo para toda la card */
+    color: white; /* Color de texto blanco para que sea legible */
+  }
+  
+  /* Padding del cuerpo de las cards de usuarios */
+  .card2-body {
+    padding: 30px; /* Aumentamos el padding para que haya espacio dentro de la card */
+    background-color: #012442; /* Fondo de la parte interna de la card */
+  }
+  
+  /* Imagen de las cards de los usuarios */
+  .card2-img-top, .img-fluid {
+    object-fit: cover; /* Asegura que las imágenes no se deformen */
+    border-radius: 20px; /* Bordes redondeados en las imágenes */
+  }
+  
+  /* Espaciado entre botones */
+  .row .col-md-4.mb-3 {
+    margin-bottom: 20px;
+  }
+  
+  /* Estilo de los botones */
+  button {
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 10px; /* Bordes redondeados en los botones */
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Colores de los botones */
+  button.btn-primary {
+    background-color: #007bff;
+    border: none;
+  }
+  
+  button.btn-primary:hover {
+    background-color: #0056b3; /* Sombra más oscura al pasar el mouse */
+  }
+  
+  button.btn-warning {
+    background-color: #ffc107;
+    border: none;
+  }
+  
+  button.btn-warning:hover {
+    background-color: #e0a800;
+  }
+  
+  button.btn-success {
+    background-color: #28a745;
+    border: none;
+  }
+  
+  button.btn-success:hover {
+    background-color: #218838;
+  }
+  
+  /* Espaciado de las secciones */
+  .mt-4 {
+    margin-top: 20px;
+  }
+  
+  /* Estilo de la Card */
+  .card2 {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card2-title {
+    font-size: 1.8rem;
+    color: #ffc107;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  
+  /* Tabla de Datos Variables */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #f7f9fc;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: center;
+}
+
+.table th {
+  background-color: #004179;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.table-striped tr:nth-child(even) {
+  background-color: #e9ecef;
+}
+
+.table-hover tr:hover {
+  background-color: #ddd;
+}
+
+/* Mejora para mobile */
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+}
+
+.card2Imagenes img {
+  max-height: 400px; /* Ajustá según el diseño */
+  margin: auto;
+  display: block;
+}
+
+.list-group-item {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f0f8ff;
+}
+//==============MODAL=====================
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 600px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-body {
+  display: flex;
+  gap: 20px;
+}
+
+.fixed-data,
+.variable-data {
+  flex: 1;
+}
+
+.fixed-data h4,
+.variable-data h4 {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+.variable-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.variable-row label {
+  flex: 1;
+}
+
+button {
+  margin-top: 10px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+}

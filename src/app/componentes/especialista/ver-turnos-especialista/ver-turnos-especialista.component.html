@@ -3,11 +3,14 @@
   <h2>Mis Turnos</h2>
 
   <!-- Filtros de Especialidad y Paciente -->
+   <label>Filtros:</label>
   <div class="filtros">
-    <label>Filtrar por Especialidad:</label>
+    <label>Especialidad:</label>
     <input type="text" [(ngModel)]="filtroEspecialidad" placeholder="Ingrese especialidad">
-    <label>Filtrar por Paciente:</label>
+    <label>Paciente:</label>
     <input type="text" [(ngModel)]="filtroPaciente" placeholder="Ingrese paciente">
+    <label>Historia clinica:</label>
+    <input type="text" [(ngModel)]="filtroHistoriaClinica" placeholder="Ingrese el dato">
   </div>
 
   <!-- Tabla de Turnos -->
@@ -23,7 +26,7 @@
       </tr>
     </thead>
     <tbody class="tabla">
-      <tr *ngFor="let turno of turnos | filtroDelEspecialista: filtroEspecialidad : filtroPaciente">
+      <tr *ngFor="let turno of turnos | filtroDelEspecialista: filtroEspecialidad : filtroPaciente : filtroHistoriaClinica">
         <td>{{ turno.fecha }}</td>
         <td>{{ turno.horaInicio }} - {{ turno.horaFin }}</td>
         <td>{{ turno.especialidad }}</td>
@@ -31,24 +34,34 @@
         <td>{{ turno.estado }}</td>
         <td>
           <!-- Botón Cancelar Turno (si el estado permite cancelar) -->
-          <button *ngIf="turno.estado === 'pendiente'" class="btn btn-danger" (click)="abrirModal('cancelar', turno.id)">
+          <button *ngIf="turno.estado === 'pendiente'" class="btn btn-danger" (click)="abrirModal('cancelar', turno)">
             Cancelar
           </button>
 
           <!-- Botón Rechazar Turno (si el estado permite rechazar) -->
-          <button *ngIf="turno.estado === 'pendiente'" class="btn btn-warning" (click)="abrirModal('rechazar', turno.id)">
+          <button *ngIf="turno.estado === 'pendiente'" class="btn btn-warning" (click)="abrirModal('rechazar', turno)">
             Rechazar
           </button>
 
           <!-- Botón Aceptar Turno (si el estado permite aceptar) -->
-          <button *ngIf="turno.estado === 'pendiente'" class="btn btn-success" (click)="abrirModal('aceptar', turno.id)">
+          <button *ngIf="turno.estado === 'pendiente'" class="btn btn-success" (click)="abrirModal('aceptar', turno)">
             Aceptar
           </button>
 
           <!-- Botón Finalizar Turno (si el turno fue aceptado) -->
-          <button *ngIf="turno.estado === 'aceptado'" class="btn btn-primary" (click)="abrirModal('finalizar', turno.id)">
+          <button *ngIf="turno.estado === 'aceptado'" class="btn btn-primary" (click)="abrirModal('finalizar', turno)">
             Finalizar
           </button>
+
+          <button
+            *ngIf="turno.estado === 'realizado' && turno.mostrarBotonAgregarHistoria"
+            class="btn btn-primary"
+            (click)="abrirModalHistoriaClinica(turno)"
+          >
+            Agregar historia clínica
+          </button>
+
+
 
           <!-- Botón Ver Reseña (si el turno tiene comentarios) -->
           <button 
@@ -84,5 +97,50 @@
     <button (click)="cerrarComentarioModal()" class="btn btn-secondary">Cerrar</button>
   </div>
 </div>
+
+<!-- Modal para historia clinica -->
+<div class="modal" *ngIf="showModalHistoriaClinica">
+  <div class="modal-content">
+    <h3>Configurar historia clinica</h3>
+    <div class="modal-body">
+      <!-- Sección Izquierda: Datos Fijos -->
+      <div class="fixed-data">
+        <h4>Datos Fijos</h4>
+        <label>Altura: <input type="number" [(ngModel)]="datosFijos.altura" /></label>
+        <label>Peso: <input type="number" [(ngModel)]="datosFijos.peso" /></label>
+        <label>Temperatura: <input type="number" [(ngModel)]="datosFijos.temperatura" /></label>
+        <label>Presión: <input type="text" [(ngModel)]="datosFijos.presion" /></label>
+      </div>
+
+      <!-- Sección Derecha: Datos Variables -->
+      <div class="variable-data">
+        <h4>Datos Variables</h4>
+        <div *ngFor="let variable of datosVariables; let i = index" class="variable-row">
+          <label>
+            Clave: <input type="text" [(ngModel)]="variable.clave" />
+          </label>
+          <label>
+            Valor: <input type="text" [(ngModel)]="variable.valor" />
+          </label>
+          <button (click)="eliminarDatoVariable(i)" class="btn btn-danger">Eliminar</button>
+        </div>
+        <button
+          *ngIf="datosVariables.length < 3"
+          (click)="agregarDatoVariable()"
+          class="btn btn-primary"
+        >
+          Agregar Dato Variable
+        </button>
+      </div>
+    </div>
+
+    <!-- Botones del Modal -->
+    <div class="modal-footer">
+      <button (click)="enviarDatos(this.turnoAbierto)" class="btn btn-success">Enviar</button>
+      <button (click)="cerrarModalHistoriaClinica()" class="btn btn-secondary">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 
 <app-spinner *ngIf="spinner"></app-spinner>

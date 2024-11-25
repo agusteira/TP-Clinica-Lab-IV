@@ -2,7 +2,7 @@
 
 
 
-<div class="container mt-4">
+<div class="container mt-4" [@slideInOut]>
 
   <!-- Card Principal -->
   <div class="card shadow-lg">
@@ -31,6 +31,7 @@
           </button>
         </div>
       </div>
+
 
       <!-- Sección de Contenido Dentro de la Card -->
       <div *ngIf="seccionActiva === 'verUsuarios'" class="mt-4">

@@ -100,3 +100,63 @@ body {
     margin-top: 20px;
   }
   
+  /* Estilo de la Card */
+  .card2 {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card2-title {
+    font-size: 1.8rem;
+    color: #ffc107;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  
+  /* Tabla de Datos Variables */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #f7f9fc;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: center;
+}
+
+.table th {
+  background-color: #004179;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.table-striped tr:nth-child(even) {
+  background-color: #e9ecef;
+}
+
+.table-hover tr:hover {
+  background-color: #ddd;
+}
+
+/* Mejora para mobile */
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+}
+
+.card2Imagenes img {
+  max-height: 400px; /* Ajustá según el diseño */
+  margin: auto;
+  display: block;
+}
+

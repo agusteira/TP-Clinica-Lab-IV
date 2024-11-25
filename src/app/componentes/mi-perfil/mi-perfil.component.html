@@ -2,38 +2,96 @@
 <app-nav-paciente *ngIf="params.tipo == 'paciente'"></app-nav-paciente>
 <app-nav-especialista *ngIf="params.tipo == 'especialista'"></app-nav-especialista>
 
-<div *ngIf="usuario != null" class="contenedor">
+<div *ngIf="usuario != null" class="contenedor" [@slideInOut]>
   <div class="card2 card2-background">
     <div class="row no-gutters">
       <!-- Columna 1: Información del Usuario -->
       <div class="col-md-8">
         <div class="card2-body">
-          <h2 class="card2-title mb-3">{{ usuario.nombre }} {{ usuario.apellido }}</h2>
-          <ul class="info-list">
-            <li><strong>Edad:</strong> {{ usuario.edad }}</li>
-            <li><strong>DNI:</strong> {{ usuario.DNI }}</li>
-            <li><strong>Correo:</strong> {{ usuario.correo }}</li>
-            <li><strong>Tipo de Usuario:</strong> {{ usuario.tipoUsuario }}</li>
-          </ul>
-          <div *ngIf="usuario.tipoUsuario === 'paciente'">
-            <p><strong>Obra Social:</strong> {{ usuario.obraSocial }}</p>
-          </div>
-          <div *ngIf="usuario.tipoUsuario === 'especialista'">
-            <p><strong>Especialidades:</strong> {{ usuario.especialidades | especialidad }}</p>
-            <p><strong>Habilitado:</strong> {{ usuario.habilitado }}</p>
+          <!-- Datos del paciente -->
+          <h5 class="card2-title">{{ usuario.nombre }} {{ usuario.apellido }}</h5>
+          <p class="card2-text">
+            <strong>Edad:</strong> {{ usuario.edad }}<br>
+            <strong>DNI:</strong> {{ usuario.DNI }}<br>
+            <strong>Correo:</strong> {{ usuario.correo }}<br>
+            <strong>Obra Social:</strong> {{ usuario.obraSocial }}
+          </p>
+      
+          <!-- Historia Clínica -->
+          <div *ngIf="usuario.historiaClinica">
+            <h2 class="card2-title">Historia Clínica</h2>
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Altura</th>
+                  <th>Peso</th>
+                  <th>Presión</th>
+                  <th>Temperatura</th>
+                  <th>Datos Variables</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let key of objectKeys(usuario.historiaClinica.datosVariables); let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ usuario.historiaClinica.datosVariables[key].datosFijos?.altura || 'N/A' }}</td>
+                  <td>{{ usuario.historiaClinica.datosVariables[key].datosFijos?.peso || 'N/A' }}</td>
+                  <td>{{ usuario.historiaClinica.datosVariables[key].datosFijos?.presion || 'N/A' }}</td>
+                  <td>{{ usuario.historiaClinica.datosVariables[key].datosFijos?.temperatura || 'N/A' }}</td>
+                  <td>
+                    <ul>
+                      <li *ngFor="let varKey of objectKeys(usuario.historiaClinica.datosVariables[key].datosVariables)">
+                        {{ varKey }}: {{ usuario.historiaClinica.datosVariables[key].datosVariables[varKey] }}
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
+      
 
       <!-- Columna 2: Imágenes -->
       <div class="col-md-4 d-flex flex-column align-items-center">
         <div class="card2-image">
           <img *ngIf="usuario.foto1" [src]="usuario.foto1" alt="Foto de Usuario" class="img-fluid">
           <img *ngIf="usuario.foto2" [src]="usuario.foto2" alt="Foto Adicional" class="img-fluid mt-3">
+          <div class="d-flex justify-content-start align-items-center mt-3 w-100">
+            <select 
+              class="form-select" 
+              *ngIf="usuario.tipoUsuario == 'paciente'" 
+              [(ngModel)]="especialidadSeleccionada" 
+              style="flex: 3; height: 50px;">
+              <option [value]="null" disabled selected>Seleccione una especialidad</option>
+              <option *ngFor="let especialidad of especialidades" [value]="especialidad">
+                {{ especialidad }}
+              </option>
+            </select>
+            <button 
+              class="btn btn-success me-2" 
+              (click)="exportarHistoriaClinicaFiltrada(especialidadSeleccionada)"
+              *ngIf="usuario.tipoUsuario == 'paciente'" 
+              [disabled]="!especialidadSeleccionada" 
+              style="flex: 1; height: 40px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5V12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10.4a.5.5 0 0 1 1 0V12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V10.4a.5.5 0 0 1 .5-.5z"/>
+                <path d="M5.646 4.854a.5.5 0 0 1 .708-.708L8 6.793l1.646-1.647a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2z"/>
+                <path d="M8 1.5a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5z"/>
+              </svg>
+            </button>
+          </div>
+          
         </div>
       </div>
+      
+      
     </div>
   </div>
+
+  
+  
 
   <div *ngIf="params.tipo == 'especialista'">
     <div class="card2 mt-4 card2-background" *ngIf="horarios?.length > 0">
@@ -89,12 +147,13 @@
             <!-- Botones de acción -->
             <div class="mt-3">
               <button *ngIf="!horario.editando" class="btn btn-primary btn-sm" (click)="activarEdicion(horario)">Editar</button>
-              <button *ngIf="horario.editando" 
-                      class="btn btn-success btn-sm" 
-                      (click)="guardarEdicion(horario)" 
-                      [disabled]="!isFormGroupValid(i)">
+              <button 
+                *ngIf="horario.editando" 
+                class="btn btn-success btn-sm" 
+                (click)="guardarEdicion(horario, i)" 
+                [disabled]="!isFormGroupValid(i)">
                 Guardar
-              </button>
+                </button>
               <button *ngIf="horario.editando" class="btn btn-danger btn-sm" (click)="cancelarEdicion(horario, i)">Cancelar</button>
             </div>
           </div>

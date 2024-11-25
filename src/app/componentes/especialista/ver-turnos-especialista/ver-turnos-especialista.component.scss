@@ -97,6 +97,7 @@ button.btn-success:hover {
   margin-bottom: 20px;
   display: flex;
   gap: 15px;
+  align-items: center;
 }
 
 .filtros label {
@@ -108,7 +109,8 @@ button.btn-success:hover {
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 8px;
-  width: 200px;
+  height: 70px;
+  //width: 200px;
 }
 
 .tabla{
@@ -134,12 +136,55 @@ button.btn-success:hover {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  width: 400px;
+  width: 600px;
   max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-textarea {
+.modal-body {
+  display: flex;
+  gap: 20px;
+}
+
+.fixed-data,
+.variable-data {
+  flex: 1;
+}
+
+.fixed-data h4,
+.variable-data h4 {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input {
   width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+.variable-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.variable-row label {
+  flex: 1;
+}
+
+button {
   margin-top: 10px;
-  margin-bottom: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
 }

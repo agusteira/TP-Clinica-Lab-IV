@@ -1,9 +1,12 @@
 <div *ngIf="listaUsuarios.length > 0">
   <div class="d-flex flex-column">
+    <button class="btn btn-success" (click)="exportarUsuariosExcel()">
+      Exportar usuarios EXCEL
+    </button>
     <div *ngFor="let usuario of listaUsuarios" class="card2 mb-4 card2-background" style="width: 100%;">
       <div class="row no-gutters" *ngIf="!(usuario.tipoUsuario == 'especialista' && (usuario.habilitado =='pendiente' || usuario.habilitado =='rechazado'))">
         <!-- Columna 1: Datos del usuario -->
-        <div class="col-md-8">
+        <div class="col-md-4">
           <div class="card2-body">
             <h5 class="card2-title">{{ usuario.nombre }} {{ usuario.apellido }}</h5>
             <p class="card2-text">
@@ -42,21 +45,75 @@
               <button *ngIf="usuario.flag=='false'" class="btn btn-success" (click)="habilitarUsuario(usuario.id)">
                 Habilitar
               </button>
+              <button class="btn btn-success" (click)="exportarTurnosExcel(usuario)" *ngIf="usuario.tipoUsuario == 'paciente'">
+                Exportar turnos
+              </button>
             </div>
           </div>
+
+          
         </div>
+
+        
 
         <!-- Columna 2: Imágenes del usuario -->
         <div class="col-md-4 card2Imagenes">
-          <div class="card2-body">
+          <div class="card2-body d-flex justify-content-between">
             <!-- Foto 1 -->
-            <img *ngIf="usuario.foto1" [src]="usuario.foto1" class="img-fluid mb-2" alt="Foto de Usuario">
-
+            <img *ngIf="usuario.foto1" [src]="usuario.foto1" class="img-fluid mr-2" alt="Foto de Usuario">
             <!-- Foto 2 -->
             <img *ngIf="usuario.foto2" [src]="usuario.foto2" class="img-fluid" alt="Foto adicional">
           </div>
         </div>
+        
       </div>
+      <div *ngIf="usuario.tipoUsuario === 'paciente' && usuario.historiaClinica" class="card2-body">
+          <h2 class="card2-title mb-3">Historia Clínica</h2>
+        
+          <!-- Datos Fijos 
+          <div>
+            <h4>Datos Fijos</h4>
+            <ul class="info-list">
+              <li><strong>Altura:</strong> {{ usuario.historiaClinica.datosFijos.altura }} cm</li>
+              <li><strong>Peso:</strong> {{ usuario.historiaClinica.datosFijos.peso }} kg</li>
+              <li><strong>Presión:</strong> {{ usuario.historiaClinica.datosFijos.presion }}</li>
+              <li><strong>Temperatura:</strong> {{ usuario.historiaClinica.datosFijos.temperatura }} °C</li>
+            </ul>
+          </div>-->
+        
+          <!-- Tabla para Datos Variables -->
+          <div *ngIf="usuario.historiaClinica.datosVariables">
+            <!-- <h4>Datos Variables</h4>-->
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Altura</th>
+                  <th>Peso</th>
+                  <th>Presión</th>
+                  <th>Temperatura</th>
+                  <th>Datos Variables</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let key of objectKeys(usuario.historiaClinica.datosVariables); let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ usuario.historiaClinica.datosVariables[key].datosFijos?.altura || 'N/A' }}</td>
+                  <td>{{ usuario.historiaClinica.datosVariables[key].datosFijos?.peso || 'N/A' }}</td>
+                  <td>{{ usuario.historiaClinica.datosVariables[key].datosFijos?.presion || 'N/A' }}</td>
+                  <td>{{ usuario.historiaClinica.datosVariables[key].datosFijos?.temperatura || 'N/A' }}</td>
+                  <td>
+                    <ul>
+                      <li *ngFor="let varKey of objectKeys(usuario.historiaClinica.datosVariables[key].datosVariables)">
+                        {{ varKey }}: {{ usuario.historiaClinica.datosVariables[key].datosVariables[varKey] }}
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
     </div>
   </div>
 </div>

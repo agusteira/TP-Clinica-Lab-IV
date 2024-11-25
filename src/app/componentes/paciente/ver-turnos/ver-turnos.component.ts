@@ -1,18 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, updateDoc, doc } from '@angular/fire/firestore';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Firestore, collection, query, where, getDocs, updateDoc, doc, onSnapshot } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { NavPacienteComponent } from '../../navbar/nav-paciente/nav-paciente.component';
 import { CommonModule } from '@angular/common';
 import { FiltroTurnosPipe } from '../../../pipelines/filtro-turnos.pipe';
 import { SpinnerComponent } from "../../../spinner/spinner.component";
+import { trigger, transition, style, animate } from '@angular/animations';
+import { FirebaseServices } from '../../../services/firebase.services';
 
 @Component({
   selector: 'app-ver-turnos',
   standalone: true,
   imports: [NavPacienteComponent, CommonModule, FiltroTurnosPipe, FormsModule, SpinnerComponent],
   templateUrl: './ver-turnos.component.html',
-  styleUrl: './ver-turnos.component.scss'
+  styleUrl: './ver-turnos.component.scss',
+  animations: [
+    trigger('slideInOut', [
+      // Página entrando desde abajo
+      transition(':enter', [
+        style({ transform: 'translateY(100%)', opacity: 0 }),
+        animate('1300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 })),
+      ]),
+      // Página saliendo hacia abajo
+      transition(':leave', [
+        animate('1300ms ease-in', style({ transform: 'translateY(100%)', opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class VerTurnosComponent {
   turnos: any[] = [];
@@ -24,7 +39,7 @@ export class VerTurnosComponent {
 
   filtroEspecialidad: string = '';
   filtroEspecialista: string = '';
-
+  filtroHistoriaClinica:string = ''
 
   //modal
   showModal: boolean = false;
@@ -49,7 +64,9 @@ export class VerTurnosComponent {
   constructor(
     private firestore: Firestore,
     private auth: Auth,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+    private fbsvc: FirebaseServices
   ) {
     this.filterForm = this.fb.group({
       especialidad: [''],
@@ -58,17 +75,13 @@ export class VerTurnosComponent {
   }
 
   async ngOnInit() {
-
     this.pacienteId = this.auth.currentUser ? this.auth.currentUser.email : null;
-
     if (this.pacienteId) {
       await this.cargarTurnos();
-      this.aplicarFiltros();
     }
-
-    this.filterForm.valueChanges.subscribe(() => this.aplicarFiltros());
+    //this.filterForm.valueChanges.subscribe(() => this.aplicarFiltros());
   }
-
+  /*
   async cargarTurnos() {
     this.spinner = true;
     const q = query(
@@ -87,18 +100,77 @@ export class VerTurnosComponent {
 
     this.turnosFiltrados = [...this.turnos]; // Iniciar con todos los turnos
     this.spinner = false;
-  }
+  }*/
 
-  aplicarFiltros() {
-    const { especialidad, especialista } = this.filterForm.value;
-    this.turnosFiltrados = this.turnos.filter(turno => {
-      return (
-        (especialidad ? turno.especialidad === especialidad : true) &&
-        (especialista ? turno.especialistaId === especialista : true)
-      );
+
+  cargarTurnos() {
+    const q = query(
+      collection(this.firestore, 'Turnos'),
+      where('pacienteId', '==', this.pacienteId)
+    );
+  
+    // Suscribirse a los cambios en Firestore
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      this.turnos = [];
+  
+      querySnapshot.forEach((doc) => {
+        const turno = doc.data();
+        turno['id'] = doc.id;
+        this.especialidades.add(turno['especialidad']);
+        this.especialistas.add(turno['especialistaId']);
+
+        if (turno['estado'] === 'realizado') {
+          this.verificarQueNoSeAgregoLaHistoriaClinica(turno);
+        }
+        
+        this.turnos.push(turno);
+      });
+  
+      // Ordenar por fecha y luego por horaInicio
+      this.turnos.sort((a, b) => {
+        // Formato esperado: "DD/MM/YYYY" para fecha y "HH:mm" para horaInicio
+        const [diaA, mesA, anioA] = a.fecha.split('/').map(Number);
+        const [diaB, mesB, anioB] = b.fecha.split('/').map(Number);
+  
+        // Crear objetos Date solo con fecha
+        const fechaA = new Date(anioA, mesA - 1, diaA);
+        const fechaB = new Date(anioB, mesB - 1, diaB);
+  
+        if (fechaA.getTime() !== fechaB.getTime()) {
+          // Ordenar por fecha
+          return fechaA.getTime() - fechaB.getTime();
+        } else {
+          // Ordenar por horaInicio si las fechas son iguales
+          const [horaA, minutoA] = a.horaInicio.split(':').map(Number);
+          const [horaB, minutoB] = b.horaInicio.split(':').map(Number);
+  
+          // Comparar horas y minutos
+          return horaA !== horaB ? horaA - horaB : minutoA - minutoB;
+        }
+      });
+      this.cdr.detectChanges(); // Forzar detección de cambios en el DOM
     });
+  
+    // Retornamos la función para cancelar la suscripción si es necesario
+    return unsubscribe;
   }
 
+  async verificarQueNoSeAgregoLaHistoriaClinica(turno: any): Promise<void> {
+    const paciente = await this.fbsvc.traerUsuario(turno.pacienteId);
+
+    if(paciente!['historiaClinica']['datosVariables'][turno.id]){
+      turno.historiaClinica = paciente!['historiaClinica']['datosVariables'][turno.id];
+      console.log(turno.historiaClinica )
+    }
+    
+    turno.mostrarBotonAgregarHistoria =
+      !paciente!['historiaClinica'] ||
+      !paciente!['historiaClinica']['datosVariables'] ||
+      !paciente!['historiaClinica']['datosVariables'][turno.id];
+
+      this.cdr.detectChanges();
+      
+  }
 
   async completarEncuesta(turnoId: string) {
     const comentarios = prompt('Ingrese sus comentarios para la encuesta:');
@@ -109,7 +181,7 @@ export class VerTurnosComponent {
       });
       alert('Encuesta completada exitosamente.');
       await this.cargarTurnos();
-      this.aplicarFiltros();
+      //this.aplicarFiltros();
     }
   }
 
@@ -134,7 +206,7 @@ export class VerTurnosComponent {
       this.spinner = false
       this.cerrarCalificarModal(); // Cerrar el modal
       await this.cargarTurnos(); // Recargar los turnos
-      this.aplicarFiltros();
+      //this.aplicarFiltros();
     }
   }
 
