@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, CollectionReference, doc, Firestore, getDocs, getFirestore, query, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, CollectionReference, doc, Firestore, getDocs, getFirestore, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { FormGroup } from '@angular/forms';
 import { Storage, getStorage, ref, uploadBytes, getDownloadURL,uploadString } from "@angular/fire/storage";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from '@angular/fire/auth';
@@ -676,7 +676,6 @@ export class FirebaseServices {
     const [horas, minutos] = hora.split(':').map(Number);
     return new Date(anio, mes - 1, dia, horas, minutos);
   }
-
   
   async traerTurnosPorUsuario(correo: string){
     const q = query(
@@ -701,4 +700,52 @@ export class FirebaseServices {
     // Retornar solo los 3 últimos turnos
     return turnosOrdenados;
   }
+
+  async cargarTurnos() {
+    const q = query(
+      collection(this.firestore, 'Turnos')
+    );
+    const querySnapshot = await getDocs(q);
+  
+    const turnos = querySnapshot.docs.map(doc => {
+      const turno = doc.data();
+      turno['id'] = doc.id; // Guardamos el ID del documento
+      return turno;
+    });
+  
+    // Ordenar los turnos por fecha
+    turnos.sort((a, b) => {
+      // Convertir las fechas de dd/mm/yyyy a yyyy/mm/dd para compararlas
+      const fechaA = a['fecha'].split('/').reverse().join('-'); // 'dd/mm/yyyy' -> 'yyyy-mm-dd'
+      const fechaB = b['fecha'].split('/').reverse().join('-');
+      return new Date(fechaA).getTime() - new Date(fechaB).getTime();
+    });
+  
+    return turnos; // Retornar los turnos ordenados por fecha
+  }
+  
+
+  //===============LOGS==================
+
+  async traerLogs() {
+    const col = collection(this.firestore, "logIniciarSesion");
+
+    // Construir la consulta base
+    let q = query(col, orderBy('datetime', 'desc')); // Ordenar por fecha y hora en orden descendente
+
+    // Agregar filtros opcionales
+    
+
+    // Obtener los documentos desde Firestore
+    const querySnapshot = await getDocs(q);
+
+    // Mapear los resultados a un array de objetos
+    const logs = querySnapshot.docs.map(doc => ({
+      id: doc.id, // ID del documento
+      ...doc.data(), // Datos del documento
+    }));
+
+    return logs;
+  }
+
 }

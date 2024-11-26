@@ -14,6 +14,7 @@ import { TodosLosTurnosComponent } from './componentes/administrador/todos-los-t
 import { SolicitarTurnoAdminComponent } from './componentes/administrador/solicitar-turno/solicitar-turno.component';
 import { MiPerfilComponent } from './componentes/mi-perfil/mi-perfil.component';
 import { PacientesComponent } from './componentes/especialista/pacientes/pacientes.component';
+import { EstadisticasComponent } from './componentes/administrador/estadisticas/estadisticas.component';
 
 export const routes: Routes = [
     { path: 'landing', component: HomeComponent },
@@ -35,7 +36,7 @@ export const routes: Routes = [
                 path:"solicitar-turno", component: SolicitarTurnoAdminComponent
             },
             {
-                path:"mi-perfil", component: MiPerfilComponent
+                path:"estadisticas", component: EstadisticasComponent
             }
         ]
     },

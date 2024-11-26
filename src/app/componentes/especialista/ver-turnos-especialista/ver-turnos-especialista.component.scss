@@ -188,3 +188,16 @@ button {
   display: flex;
   justify-content: space-between;
 }
+//==============DIRECTIVA===================
+.estado-cancelado {
+  background-color: #f8d7da !important;
+  color: #721c24 !important;
+}
+.estado-realizado {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+}
+.estado-pendiente {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+}

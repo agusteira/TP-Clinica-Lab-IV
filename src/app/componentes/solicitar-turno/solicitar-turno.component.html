@@ -11,7 +11,8 @@
             *ngFor="let especialista of especialistas" 
             (click)="selectedEspecialista = especialista.id; onEspecialistaChange()"
             [class.selected]="especialista.id === selectedEspecialista"
-            class="option-item card-especialista">
+            class="option-item card-especialista"
+            appMarcarOpcion>
             
             <img *ngIf="especialista.foto1" [src]="especialista.foto1" class="foto-especialista" alt="Foto del especialista">
             
@@ -27,7 +28,8 @@
           *ngFor="let especialidad of especialidades" 
           (click)="selectedEspecialidad = especialidad; generarFechasDisponibles()"
           [class.selected]="especialidad === selectedEspecialidad"
-          class="option-item card-especialidad">
+          class="option-item card-especialidad"
+          appMarcarOpcion>
           
           <img [src]="obtenerImagenEspecialidad(especialidad)" class="foto-especialidad" alt="Imagen de la especialidad">
           <p>{{especialidad}}</p>
@@ -42,7 +44,8 @@
           *ngFor="let fecha of fechasDisponibles" 
           (click)="selectedFecha = fecha; cargarHorarios()" 
           [class.selected]="fecha === selectedFecha"
-          class="option-item card-fecha">
+          class="option-item card-fecha"
+          appMarcarOpcion>
           {{ fecha }}
         </div>
       </div>
@@ -55,7 +58,8 @@
           *ngFor="let hora of turnosDisponibles" 
           (click)="selectedHora = hora" 
           [class.selected]="hora === selectedHora"
-          class="option-item ">
+          class="option-item "
+          appMarcarOpcion>
           {{ hora | formatoHora}}
         </div>
       </div>

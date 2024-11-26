@@ -10,5 +10,5 @@ import { LandingComponent } from "../../landing/landing.component";
   styleUrl: './admin-home.component.scss'
 })
 export class AdminHomeComponent {
-
+  
 }

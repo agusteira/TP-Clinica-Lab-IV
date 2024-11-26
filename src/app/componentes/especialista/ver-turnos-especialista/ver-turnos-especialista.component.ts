@@ -7,11 +7,13 @@ import { FiltroDelEspecialistaPipe } from '../../../pipelines/filtro-del-especia
 import { NavEspecialistaComponent } from '../../navbar/nav-especialista/nav-especialista.component';
 import { SpinnerComponent } from "../../../spinner/spinner.component";
 import { FirebaseServices } from '../../../services/firebase.services';
+import { HoverTablaDirective } from '../../../directivas/hover-tabla.directive';
+import { TurnosAdminDirective } from '../../../directivas/turnos-admin.directive';
 
 @Component({
   selector: 'app-ver-turnos-especialista',
   standalone: true,
-  imports: [NavEspecialistaComponent, CommonModule, FormsModule, FiltroDelEspecialistaPipe, SpinnerComponent],
+  imports: [NavEspecialistaComponent, TurnosAdminDirective, CommonModule, FormsModule, FiltroDelEspecialistaPipe, SpinnerComponent, HoverTablaDirective],
   templateUrl: './ver-turnos-especialista.component.html',
   styleUrls: ['./ver-turnos-especialista.component.scss']
 })

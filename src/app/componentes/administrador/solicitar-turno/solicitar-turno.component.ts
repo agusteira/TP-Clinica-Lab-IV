@@ -8,11 +8,12 @@ import { FormatoHoraPipe } from "../../../pipelines/formato-hora.pipe";
 import { CommonModule, NgClass } from '@angular/common';
 import { Auth } from '@angular/fire/auth';
 import { NavAdminComponent } from "../../navbar/nav-admin/nav-admin.component";
+import { MarcarOpcionDirective } from '../../../directivas/marcar-opcion.directive';
 
 @Component({
   selector: 'app-solicitar-turno',
   standalone: true,
-  imports: [SpinnerComponent, NavPacienteComponent, FormatoHoraPipe, CommonModule, NavAdminComponent, NgClass],
+  imports: [SpinnerComponent, NavPacienteComponent, FormatoHoraPipe, CommonModule, NavAdminComponent, NgClass, MarcarOpcionDirective],
   templateUrl: './solicitar-turno.component.html',
   styleUrl: './solicitar-turno.component.scss',
   animations: [

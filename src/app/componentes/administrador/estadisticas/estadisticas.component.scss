@@ -144,16 +144,45 @@ textarea {
   margin-bottom: 20px;
 }
 
-//==============DIRECTIVA===================
-.estado-cancelado {
-  background-color: #f8d7da !important;
-  color: #721c24 !important;
+.canvasss {
+  display: block; /* Hace que el canvas se comporte como un bloque */
+  margin: 0 auto; /* Centra horizontalmente */
+  max-width: 90%; /* Limita el ancho máximo al 90% del contenedor */
+  max-height: 1500px; /* Limita la altura máxima */
+  width: auto; /* Permite ajustar automáticamente el ancho */
+  height: auto; /* Permite ajustar automáticamente la altura */
 }
-.estado-realizado {
-  background-color: #d4edda !important;
-  color: #155724 !important;
+
+.date-picker-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  label {
+    margin-right: 0.5rem;
+  }
+
+  input {
+    padding: 0.5rem;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    background-color: #0044cc;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
 }
-.estado-pendiente {
-  background-color: #fff3cd !important;
-  color: #856404 !important;
+
+#exportContent {
+  display: flex;
+  flex-direction: column;
+  page-break-inside: avoid; /* Evita cortar elementos internos */
+}
+
+.card-mis-turnos {
+  page-break-inside: avoid; /* Evita que se corten las tarjetas */
+  margin-bottom: 20px; /* Añade espacio entre elementos */
 }

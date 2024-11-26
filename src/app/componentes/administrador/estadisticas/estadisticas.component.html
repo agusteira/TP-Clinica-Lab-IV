@@ -1,0 +1,77 @@
+<app-nav-admin ></app-nav-admin>
+
+<!--[@slideInOut]-->
+<div clas="container" id="exportContent">
+    <div class="card-mis-turnos" >
+        <h2>Cantidad de turnos por especialidad</h2>
+        <div style="display: block;">
+            <canvas class="canvasss" id="turnosPorEspecialidadChart"></canvas>
+          </div>
+    </div>
+    
+    <div class="card-mis-turnos">
+        <h2>Cantidad de turnos por día</h2>
+        <div style="display: block;">
+          <canvas id="turnosPorDiaChart"></canvas>
+        </div>
+      </div>
+      
+      <div class="card-mis-turnos">
+        <h2>Cantidad de turnos SOLICITADOS por médico </h2>
+        <div style="display: block;">
+            <canvas id="turnosPorMedicoChart"></canvas>
+          </div>
+        <div class="date-picker-container to-hide">
+            <label for="startDate">Fecha de Inicio:</label>
+            <input id="startDate" type="date" [(ngModel)]="fechaInicio" />
+    
+            <label for="endDate">Fecha de Fin:</label>
+            <input id="endDate" type="date" [(ngModel)]="fechaFin" />
+    
+            <button (click)="filtrarTurnos()">Filtrar</button>
+        </div>
+      </div>
+    
+      <div class="card-mis-turnos">
+        <h2>Cantidad de turnos FINALIZADOS por médico</h2>
+        <div style="display: block;">
+            <canvas id="turnosFinalizadosPorMedicoChart"></canvas>
+        </div>
+        <div class="date-picker-container to-hide">
+            <label for="startDateFinalizados">Fecha de Inicio:</label>
+            <input id="startDateFinalizados" type="date" [(ngModel)]="fechaInicioFinalizados" />
+      
+            <label for="endDateFinalizados">Fecha de Fin:</label>
+            <input id="endDateFinalizados" type="date" [(ngModel)]="fechaFinFinalizados" />
+      
+            <button (click)="filtrarTurnosFinalizados()">Filtrar</button>
+        </div>
+      </div>
+      
+      
+    
+    <div class="card-mis-turnos" >
+        <h2>Logs de la clinica</h2>
+        <table class="tabla-turnos">
+        <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Usuario</th>
+        </tr>
+        </thead>
+        <tbody class="tabla">
+        <tr *ngFor="let log of logs">
+            <td>{{ log.dia }}</td>
+            <td>{{ log.hora }}</td>
+            <td>{{ log.user }}</td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+    <div style="text-align: right; margin-bottom: 20px;" class="to-hide">
+        <button (click)="exportarPDF()">Exportar a PDF</button>
+    </div>
+</div>
+
+<app-spinner *ngIf="spinner"></app-spinner>

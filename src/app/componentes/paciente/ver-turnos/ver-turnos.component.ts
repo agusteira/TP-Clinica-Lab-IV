@@ -8,11 +8,13 @@ import { FiltroTurnosPipe } from '../../../pipelines/filtro-turnos.pipe';
 import { SpinnerComponent } from "../../../spinner/spinner.component";
 import { trigger, transition, style, animate } from '@angular/animations';
 import { FirebaseServices } from '../../../services/firebase.services';
+import { TurnosAdminDirective } from '../../../directivas/turnos-admin.directive';
+import { HoverTablaDirective } from '../../../directivas/hover-tabla.directive';
 
 @Component({
   selector: 'app-ver-turnos',
   standalone: true,
-  imports: [NavPacienteComponent, CommonModule, FiltroTurnosPipe, FormsModule, SpinnerComponent],
+  imports: [NavPacienteComponent, CommonModule, FiltroTurnosPipe, FormsModule, SpinnerComponent, TurnosAdminDirective, HoverTablaDirective],
   templateUrl: './ver-turnos.component.html',
   styleUrl: './ver-turnos.component.scss',
   animations: [
