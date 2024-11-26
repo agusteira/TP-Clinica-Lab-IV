@@ -7,12 +7,14 @@ import { CommonModule } from '@angular/common';
 import { FiltroTurnosPipe } from '../../../pipelines/filtro-turnos.pipe';
 import { NavAdminComponent } from '../../navbar/nav-admin/nav-admin.component';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { TurnosAdminDirective } from '../../../directivas/turnos-admin.directive';
+import { HoverTablaDirective } from '../../../directivas/hover-tabla.directive';
 
 
 @Component({
   selector: 'app-todos-los-turnos',
   standalone: true,
-  imports: [NavAdminComponent, CommonModule, FiltroTurnosPipe, FormsModule],
+  imports: [NavAdminComponent, CommonModule, FiltroTurnosPipe, FormsModule, TurnosAdminDirective, HoverTablaDirective],
   templateUrl: './todos-los-turnos.component.html',
   styleUrl: './todos-los-turnos.component.scss',
   animations: [

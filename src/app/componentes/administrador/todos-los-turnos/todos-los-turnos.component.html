@@ -5,9 +5,9 @@
   
     <div class="filtros">
       <label>Filtrar por Especialidad:</label>
-      <input type="text" [(ngModel)]="filtroEspecialidad" placeholder="Ingrese especialidad">
+      <input type="text" [(ngModel)]="filtroEspecialidad" placeholder="Ingrese especialidad" appHoverTabla>
       <label>Filtrar por Especialista:</label>
-      <input type="text" [(ngModel)]="filtroEspecialista" placeholder="Ingrese especialista">
+      <input type="text" [(ngModel)]="filtroEspecialista" placeholder="Ingrese especialista"appHoverTabla>
     </div>
     
     <table class="tabla-turnos">
@@ -22,7 +22,8 @@
         </tr>
       </thead>
       <tbody class="tabla">
-        <tr *ngFor="let turno of turnos | filtroTurnos: filtroEspecialidad : filtroEspecialista : ''">
+        <tr *ngFor="let turno of turnos | filtroTurnos: filtroEspecialidad : filtroEspecialista : ''"
+        [appTurnosAdmin]="turno.estado">
           <td>{{ turno.fecha }}</td>
           <td>{{ turno.horaInicio }} - {{ turno.horaFin }}</td>
           <td>{{ turno.especialidad }}</td>
