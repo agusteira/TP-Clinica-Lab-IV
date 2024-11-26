@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { NavAdminComponent } from "../../navbar/nav-admin/nav-admin.component";
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Auth } from 'firebase/auth';
-import { Firestore } from 'firebase/firestore';
 import { FirebaseServices } from '../../../services/firebase.services';
-import { ChartData, ChartOptions } from 'chart.js';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 import { Chart, ArcElement, Tooltip, Legend, Title, PieController, LineController, BarController, CategoryScale, LinearScale, PointElement, LineElement, BarElement } from 'chart.js';
+import { FormsModule } from '@angular/forms';
+import { SpinnerComponent } from "../../../spinner/spinner.component";
 
 Chart.register(
   PieController,        // Para el gráfico de torta
@@ -29,7 +30,7 @@ Chart.register(
 @Component({
   selector: 'app-estadisticas',
   standalone: true,
-  imports: [NavAdminComponent, CommonModule],
+  imports: [NavAdminComponent, CommonModule, FormsModule, SpinnerComponent],
   templateUrl: './estadisticas.component.html',
   styleUrl: './estadisticas.component.scss'
 })
@@ -45,14 +46,22 @@ export class EstadisticasComponent implements OnInit {
 
   turnosPorMedico: { [key: string]: number } = {};
   turnosPorMedicoChart: any;
+  fechaInicio: string | null = null; // Usamos string porque el valor del input es una cadena
+  fechaFin: string | null = null;
 
+  turnosFinalizadosPorMedico: { [key: string]: number } = {};
+  turnosFinalizadosPorMedicoChart: any;
+  fechaInicioFinalizados: string | null = null;
+  fechaFinFinalizados: string | null = null;
 
+  spinner: boolean = false
   async ngOnInit() {
+    this.spinner = true
     await this.traerEstadisticas()
+    this.spinner = false
   }
 
   constructor(private router: Router, private fbsvc: FirebaseServices,
-    //private firestore: Firestore
   ) { // Inyecta Router
 
   }
@@ -79,6 +88,10 @@ export class EstadisticasComponent implements OnInit {
     const endDate = new Date('2024-12-31');
     this.generarDatosParaGraficoDeTurnosPorMedico(startDate, endDate);
     this.renderizarGraficoDeTurnosPorMedico();
+
+    this.generarDatosParaGraficoDeTurnosFinalizadosPorMedico(startDate, endDate);
+    this.renderizarGraficoDeTurnosFinalizadosPorMedico();
+
   }
   //=================GRAFICO 1=================
   
@@ -215,15 +228,17 @@ export class EstadisticasComponent implements OnInit {
   generarDatosParaGraficoDeTurnosPorMedico(startDate: Date, endDate: Date) {
     const start = new Date(startDate).getTime();
     const end = new Date(endDate).getTime();
+
+    //Aca quiero generar un filtro en donde a this.turnos le dejamos SOLAMENTE los turnos
+    //donde turno[x].estado != "realizado" y lo guardamos en una constante nueva
+    const turnosFiltrados = this.turnos.filter(turno => turno.estado !== "realizado");
   
-    this.turnosPorMedico = this.turnos.reduce((acc, turno) => {
-      // Convertir la fecha del turno al formato Date
+    this.turnosPorMedico = turnosFiltrados.reduce((acc, turno) => {
       const [day, month, year] = turno.fecha.split('/'); // Formato 'dd/mm/yyyy'
       const turnoFecha = new Date(`${year}-${month}-${day}`).getTime();
   
-      // Verificar si la fecha está dentro del rango
       if (turnoFecha >= start && turnoFecha <= end) {
-        const medico = turno.nombreEspecialista; // Tomamos el nombre del médico
+        const medico = turno.nombreEspecialista; 
         acc[medico] = (acc[medico] || 0) + 1;
       }
       return acc;
@@ -289,6 +304,169 @@ export class EstadisticasComponent implements OnInit {
       });
     }, 0);
   }
+  
+  filtrarTurnos() {
+    if (this.fechaInicio && this.fechaFin) {
+      const startDate = new Date(this.fechaInicio);
+      const endDate = new Date(this.fechaFin);
+
+      this.generarDatosParaGraficoDeTurnosPorMedico(startDate, endDate);
+      this.renderizarGraficoDeTurnosPorMedico();
+    }
+  }
+
+   //=================GRAFICO 4=================
+  
+   generarDatosParaGraficoDeTurnosFinalizadosPorMedico(startDate: Date, endDate: Date) {
+    const start = new Date(startDate).getTime();
+    const end = new Date(endDate).getTime();
+  
+    // Filtrar los turnos realizados
+    const turnosFinalizados = this.turnos.filter(turno => turno.estado === "realizado");
+  
+    // Reducir los datos para calcular los turnos finalizados por médico
+    this.turnosFinalizadosPorMedico = turnosFinalizados.reduce((acc, turno) => {
+      const [day, month, year] = turno.fecha.split('/'); // Formato 'dd/mm/yyyy'
+      const turnoFecha = new Date(`${year}-${month}-${day}`).getTime();
+  
+      if (turnoFecha >= start && turnoFecha <= end) {
+        const medico = turno.nombreEspecialista;
+        acc[medico] = (acc[medico] || 0) + 1;
+      }
+      return acc;
+    }, {});
+  }
+  renderizarGraficoDeTurnosFinalizadosPorMedico() {
+    setTimeout(() => {
+      const ctx = document.getElementById('turnosFinalizadosPorMedicoChart') as HTMLCanvasElement;
+  
+      if (this.turnosFinalizadosPorMedicoChart) {
+        this.turnosFinalizadosPorMedicoChart.destroy(); // Destruye el gráfico anterior si existe
+      }
+  
+      this.turnosFinalizadosPorMedicoChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(this.turnosFinalizadosPorMedico), // Nombres de los médicos
+          datasets: [
+            {
+              label: 'Turnos Finalizados por Médico',
+              data: Object.values(this.turnosFinalizadosPorMedico), // Cantidad de turnos
+              backgroundColor: 'rgba(75, 192, 192, 0.8)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                color: 'white'
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: 'white'
+              },
+              title: {
+                display: true,
+                text: 'Médicos',
+                color: 'white'
+              }
+            },
+            y: {
+              ticks: {
+                color: 'white'
+              },
+              title: {
+                display: true,
+                text: 'Cantidad de Turnos',
+                color: 'white'
+              }
+            }
+          }
+        }
+      });
+    }, 0);
+  }
+  filtrarTurnosFinalizados() {
+    if (this.fechaInicioFinalizados && this.fechaFinFinalizados) {
+      const startDate = new Date(this.fechaInicioFinalizados);
+      const endDate = new Date(this.fechaFinFinalizados);
+  
+      this.generarDatosParaGraficoDeTurnosFinalizadosPorMedico(startDate, endDate);
+      this.renderizarGraficoDeTurnosFinalizadosPorMedico();
+    } else {
+      alert('Por favor, selecciona ambas fechas.');
+    }
+  }
+  
+  //==============EXPORTAR PDF==================
+  exportarPDF() {
+    this.spinner = true
+    const pdf = new jsPDF('p', 'mm', 'a4'); // Formato A4
+    const content = document.getElementById('exportContent'); // Contenedor a exportar
+    const elementsToHide = document.querySelectorAll('.to-hide'); // Elementos a ocultar
+  
+    // Obtener la fecha actual
+    const fecha = new Date();
+    const fechaFormateada = fecha.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+  
+    // Ocultar los elementos no deseados
+    elementsToHide.forEach((el) => (el as HTMLElement).style.display = 'none');
+    this.spinner = false
+    if (content) {
+      html2canvas(content, { scale: 2 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        this.spinner = true
+        const imgWidth = 210; // Ancho A4 en mm
+        const pageHeight = 297; // Alto A4 en mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 20; // Deja espacio para el título
+  
+        // Agregar título al PDF
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(16);
+        pdf.text(`Reporte Clínica - ${fechaFormateada}`, imgWidth / 2, 13, { align: 'center' });
+  
+        // Agregar la imagen generada por html2canvas
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.text(`Reporte Clínica - ${fechaFormateada}`, imgWidth / 2, 10, { align: 'center' }); // Agregar título en cada página
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        // Mostrar nuevamente los elementos ocultos
+        elementsToHide.forEach((el) => (el as HTMLElement).style.display = '');
+  
+        // Descargar el PDF
+        pdf.save(`reporte-clinica-${fechaFormateada}.pdf`);
+        this.spinner = false
+      }).catch((error) => {
+        console.error('Error al generar el PDF:', error);
+  
+        // Restaurar los elementos incluso en caso de error
+        elementsToHide.forEach((el) => (el as HTMLElement).style.display = '');
+        this.spinner = false
+      });
+    }
+  }
+  
   
   
 }

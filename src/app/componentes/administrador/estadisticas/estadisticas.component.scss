@@ -152,3 +152,37 @@ textarea {
   width: auto; /* Permite ajustar automáticamente el ancho */
   height: auto; /* Permite ajustar automáticamente la altura */
 }
+
+.date-picker-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  label {
+    margin-right: 0.5rem;
+  }
+
+  input {
+    padding: 0.5rem;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    background-color: #0044cc;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+#exportContent {
+  display: flex;
+  flex-direction: column;
+  page-break-inside: avoid; /* Evita cortar elementos internos */
+}
+
+.card-mis-turnos {
+  page-break-inside: avoid; /* Evita que se corten las tarjetas */
+  margin-bottom: 20px; /* Añade espacio entre elementos */
+}
